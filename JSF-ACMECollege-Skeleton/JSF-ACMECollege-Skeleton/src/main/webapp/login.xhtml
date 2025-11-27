@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:jsf="http://xmlns.jcp.org/jsf"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+  >
+
+  <!-- SPA (single-page-application) view that supports full C-R-U-D for Students -->
+  <h:head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- title of tab/window in browser -->
+    <title>#{uiconsts['viewTitle']}</title>
+    <!-- Use modern Frontend artifacts such as JQuery, Font Awesome, Bootstrap etc. -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous" />
+    <link href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" type="text/css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="https://unpkg.com/bootstrap@4.5.2/dist/css/bootstrap.min.css" type="text/css" rel="stylesheet"  crossorigin="anonymous" />
+    <script src="https://unpkg.com/bootstrap@4.5.2/dist/js/bootstrap.min.js" crossorigin="anonymous" />
+    
+    <!-- misc style tweaks: table hover color (you can change/add to this if you like) -->
+    <style>
+      .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+        background-color: #f0f0e0;
+      }
+      .table td {
+        position: relative;
+      }
+      .table td input {
+        position: absolute;
+        display: block;
+        top:0;
+        left:0;
+        height: 100% !important;
+        width: 100%;
+        border-radius: 0 !important;
+        border: 1px solid orange;
+        padding: 8px;
+        box-sizing: border-box;
+      }
+      .refreshFooter {
+        height: 100% !important;
+        display:block; 
+        text-align: center;
+      }
+      .placeholder-darkgray {
+       color: #a9a9a9
+      }
+    </style>
+  </h:head>
+  <h:body>
+    <div class="container-fluid">
+      <!-- top navigation bar -->
+      <nav id="topbar" class="navbar navbar-light bg-light">
+        <div class="navbar-header">
+          <i class="navbar-brand fa fa-school fa-lg"/>
+          <h:outputText value="#{uiconsts['viewTitle']}"/>
+        </div>
+        <div class="navbar-header">
+          <h:panelGroup rendered="#{externalContext.userPrincipal eq null}">
+            <a href="#" data-toggle="modal" data-target="#loginModal"><span style="color: black;"><i class="fa fa-sign-in-alt" />&#160;#{uiconsts['signin']}</span></a>
+            <div id="loginModal" class="modal">
+              <h:form class="form" role="form" id="login">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h:outputText style="color: black;" escape="false" value="#{uiconsts['login']}" /> 
+                      <button type="button" class="close" data-dismiss="modal">&#8855;</button>
+                    </div>
+                    <div class="modal-body">
+                      <h:panelGroup cellpadding="2" cellspacing="1" class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="username-addon"><i class="fa fa-edit fa-fw"/></span>
+                        </div>
+                        <h:inputText id="username" styleClass="form-control placeholder-darkgray"
+                          aria-describedby="username-addon" value="#{loginBean.username}" 
+                          a:placeholder="Username">
+                        </h:inputText>
+                        <h:message for="username" style="color:red" />
+                      </h:panelGroup>
+                      <h:panelGroup class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="password-addon"><i class="fa fa-key fa-fw"/></span>
+                        </div>
+                        <br/>
+                        <h:inputSecret class="form-control placeholder-darkgray" aria-describedby="password-addon"
+                          a:placeholder="Password" value="#{loginBean.password}"
+                          id="password" />
+                      </h:panelGroup>
+                      <div class="form-group last text-right">
+                        <div class="col-sm-offset-3 col-sm-9">
+                          <h:commandButton class="btn btn-outline-dark" id="submit" value="#{uiconsts['login']}">
+                            <f:ajax execute="@form" render="@form" listener="#{loginBean.validateUsernamePassword()}" />
+                          </h:commandButton>
+                        </div>
+                      </div>
+                      <!-- is this working? -->
+                      <h:messages globalOnly="true" style="color:red" />
+                    </div>
+                  </div>
+                </div>
+              </h:form>
+            </div>
+          </h:panelGroup>
+          <h:panelGroup rendered="#{externalContext.userPrincipal ne null}"> 
+            <div class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" style="color: black;" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <h:panelGroup class="fa #{request.isUserInRole('ADMIN_ROLE') ? 'fa-user-cog': 'fa-user-circle'}">
+                 <h:outputText value=" Welcome #{externalContext.userPrincipal.name}"/> 
+                </h:panelGroup>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="userDropdown">
+                <div class="dropdown-item">
+                  <h:form id="logout">
+                    <h:commandButton action="#{loginBean.logout()}" value="#{uiconsts['signout']}" />
+                  </h:form>
+                </div>
+              </div>
+            </div>
+          </h:panelGroup>
+        </div>
+      </nav>
+      <!-- footer
+         Bootstrap CSS is clever - even though this element is defined second under the 'container-fluid',
+         it is fixed to the bottom of the page
+       -->
+      <footer class="footer fixed-bottom bg-light text-center">
+        <h:outputText class="text-muted credit" value="Brought to you by #{uiconsts['footer']} (v#{uiconsts['version']})"/>
+      </footer>  
+
+      <!-- main context -->
+      <div id="main" role="main" class="main col-12">
+      
+      </div>
+    </div>
+  </h:body>
+</html>

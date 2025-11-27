@@ -1,0 +1,342 @@
+{
+	"info": {
+		"_postman_id": "a5ad87ed-ed97-4a62-9947-c9a05d55c5bd",
+		"name": "REST-ACMECollege-Sample",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28773352"
+	},
+	"item": [
+		{
+			"name": "All students as admin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/REST-ACMECollege-Solution/api/v1/student",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"REST-ACMECollege-Solution",
+						"api",
+						"v1",
+						"student"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All courses as admin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/REST-ACMECollege-Solution/api/v1/course",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"REST-ACMECollege-Solution",
+						"api",
+						"v1",
+						"course"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All professors as admin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/REST-ACMECollege-Solution/api/v1/professor",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"REST-ACMECollege-Solution",
+						"api",
+						"v1",
+						"professor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All student clubs as admin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/REST-ACMECollege-Solution/api/v1/studentclub",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"REST-ACMECollege-Solution",
+						"api",
+						"v1",
+						"studentclub"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All letter grades as admin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/REST-ACMECollege-Solution/api/v1/courseregistration/lettergrade",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"REST-ACMECollege-Solution",
+						"api",
+						"v1",
+						"courseregistration",
+						"lettergrade"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "A course registration as admin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"student\": {\r\n        \"id\": 1,\r\n        \"version\": 1,\r\n        \"created\": \"2025-08-27T21:58:20\",\r\n        \"updated\": \"2025-08-27T21:58:20\",\r\n        \"firstName\": \"John\",\r\n        \"lastName\": \"Smith\",\r\n        \"email\": \"jsmith@algonquincollege.com\",\r\n        \"phone\": \"6131112222\",\r\n        \"program\": \"Dentistry\",\r\n        \"editable\": false\r\n    },\r\n    \"course\": {\r\n        \"id\": 2,\r\n        \"version\": 1,\r\n        \"created\": \"2025-08-27T21:58:20\",\r\n        \"updated\": \"2025-08-27T21:58:20\",\r\n        \"courseCode\": \"CST8277\",\r\n        \"courseTitle\": \"Enterprise Application Programming\",\r\n        \"creditUnits\": 3,\r\n        \"online\": 1,\r\n        \"editable\": false\r\n    },\r\n    \"professor\": null,\r\n    \"year\": \"2025\",\r\n    \"semester\": \"FALL\",\r\n    \"letterGrade\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/REST-ACMECollege-Solution/api/v1/courseregistration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"REST-ACMECollege-Solution",
+						"api",
+						"v1",
+						"courseregistration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign a professor for a course registration as admin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"id\": 2,\r\n        \"version\": 1,\r\n        \"created\": \"2025-08-28T18:56:10\",\r\n        \"updated\": \"2025-08-28T18:56:10\",\r\n        \"firstName\": \"Professor\",\r\n        \"lastName\": \"Strange\",\r\n        \"degree\": \"Doctor of Philosophy\",\r\n        \"editable\": false\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/REST-ACMECollege-Solution/api/v1/courseregistration/student/1/course/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"REST-ACMECollege-Solution",
+						"api",
+						"v1",
+						"courseregistration",
+						"student",
+						"1",
+						"course",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign a grade for a course registration as admin",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "A+",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/REST-ACMECollege-Solution/api/v1/courseregistration/student/1/course/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"REST-ACMECollege-Solution",
+						"api",
+						"v1",
+						"courseregistration",
+						"student",
+						"1",
+						"course",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

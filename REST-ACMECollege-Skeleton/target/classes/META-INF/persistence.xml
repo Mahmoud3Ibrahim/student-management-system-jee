@@ -1,0 +1,64 @@
+<persistence version="3.0" 
+   xmlns="https://jakarta.ee/xml/ns/persistence"  
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+  >
+    <persistence-unit name="acmecollege-PU" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:app/jdbc/acmecollege</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <!-- jakarta.persistence.schema-generation.database.action replaces hibernate.hbm2ddl.auto (sorta)
+                Possible values:
+                    "none":             No schema creation or deletion will take place
+                    "create":           Creates the schema necessary for your entities.
+                                        The artifacts will remain unchanged after application redeployment.
+                     "drop-and-create": Any artifacts in the database will be deleted, and the provider will
+                                        create the database artifacts on deployment.
+                    "drop":             Any artifacts in the database will be deleted on application deployment.
+            -->
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <!-- How are schema's created or dropped?
+                property = jakarta.persistence.schema-generation.create-source
+                property = jakarta.persistence.schema-generation.drop-source
+                Possible values:           
+                    "metadata": Use the object/relational Annotation metadata to create or drop database artifacts
+                                This is the default behaviour if the properties
+                                'jakarta.persistence.schema-generation.create-source' or
+                                'jakarta.persistence.schema-generation.drop-source'
+                                are not actually specified.
+                    "script":   Use the user-provided script to create or drop database artifacts
+                    "metadata-then-script": (combination) Use the metadata, then the user-provided script
+                    "script-then-metadata": (combination) Use the user-provided script, then metadata
+                Where are the scripts found? Location is relative to the persistence root folder META-INF/
+                For example, if the property 'jakarta.persistence.schema-generation.create-script-source'
+                has the value "sql/users-createDDL.sql", then the folder-tree should be:
+	                src
+	                └── main
+	                    │── java
+	                    │   └── ... (Java source files)
+	                    │
+	                    │   └── META-INF
+	                    │       ├── persistence.xml
+	                    │       └── sql
+	                    │           └── users-dropDDL.sql
+
+            -->
+            <property name="jakarta.persistence.schema-generation.create-source" value="script"/>
+            <property name="jakarta.persistence.schema-generation.create-script-source" value="sql/acmecollege-create.sql"/>
+            <property name="jakarta.persistence.schema-generation.drop-source" value="script"/>
+            <property name="jakarta.persistence.schema-generation.drop-script-source" value="sql/acmecollege-drop.sql"/>
+            <property name="jakarta.persistence.sql-load-script-source" value="sql/acmecollege-data.sql"/>
+            <!-- Hibernate specific props 
+               https://docs.jboss.org/hibernate/stable/orm/userguide/html_single/Hibernate_User_Guide.html#configurations -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.hbm2ddl.import_files_sql_extractor" value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
+            <property name="hibernate.connection.autocommit" value="false"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+            <property name="hibernate.transaction.coordinator_class" value="jta" />
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+        </properties>
+    </persistence-unit>
+</persistence>

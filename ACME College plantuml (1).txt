@@ -1,0 +1,106 @@
+@startuml
+skinparam titleFontColor #0000FF
+skinparam genericDisplay old
+top to bottom direction
+annotation Embeddable
+title ACME College Group Project
+
+abstract class PojoBase {
+    #id: int
+    #version: int
+    #created: LocalDateTime 
+    #updated: LocalDateTime
+}
+
+note top of PojoBase #FFFFCC
+  Classes extend PojoBase except as indicated.
+end note
+
+abstract class PojoBaseCompositeKey<ID> {
+    #version: int
+    #created: LocalDateTime 
+    #updated: LocalDateTime
+    +getId(): ID
+}
+
+together {
+  class Student {
+    #firstName: String
+    #lastName: String
+    #email: String
+    #phone: String
+    #program: String
+    #courseRegistrations: Set<CourseRegistration>
+    #studentClubs: Set<StudentClub>
+    #editable: boolean
+  }
+  class Course {
+    #courseCode: String
+    #courseTitle: String
+    #creditUnits: Integer
+    #online: Short
+    #courseRegistrations: Set<CourseRegistration>
+    #editable: boolean
+  }
+  class CourseRegistrationPK {
+    #studentId : int
+    #courseId : int
+  }
+  Embeddable -- CourseRegistrationPK
+  class CourseRegistration <<extends PojoBaseCompositeKey<CourseRegistrationPK>>> extends PojoBaseCompositeKey  {
+  	#id: CourseRegistrationPK
+	  #student: Student
+	  #course: Course
+	  #professor: Professor
+    #year: int
+    #semester: String
+    #letterGrade: String
+  }
+
+  CourseRegistration -r- CourseRegistrationPK: id
+  CourseRegistration "<i>has a</i>" ---> Student: student
+  CourseRegistration "<i>has a</i>" ---> Course: course
+  CourseRegistration "<i>has a</i>" ---> Professor: professor
+  Professor "<i>has many</i>" *---> "*" CourseRegistration: courseRegistrations
+  Student "<i>has many</i>" *---> "*" CourseRegistration: courseRegistrations
+  Course "<i>has many</i>" *---> "*" CourseRegistration: courseRegistrations
+  class Professor {
+    #firstName: String
+    #lastName: String
+    #degree: String
+    #courseRegistrations: Set<CourseRegistration>
+    #editable: boolean
+  }
+  class StudentClub {
+    #name: String
+    #desc: String
+    #isAcademic: boolean
+    #studentMembers: Set<Student>
+    #editable: boolean
+  }
+  StudentClub <|-d- Academic
+  StudentClub <|-d- NonAcademic
+  StudentClub "<i>has many</i>" *--> "*" Student: studentMembers
+  Student "<i>has many</i>" *--> "*" StudentClub: studentClubs
+
+  class SecurityUser <<Object>>  {
+    #id: int
+    #username: String
+    #pwHash: String
+    #student: Student
+    #roles: Set<SecurityRole>
+  }
+  class SecurityRole<<Object>> {
+    #id: int
+    #roleName: String
+    #users: Set<SecurityUser>
+  }
+  SecurityUser "<i>has many</i> roles" *--* "*" SecurityRole
+  SecurityUser "<i>has a</i>" --> Student: student
+  SecurityRole "<i>has many</i> users" *--* "*" SecurityUser
+}
+
+footer
+CST 8277 Group Project
+endfooter
+@enduml
