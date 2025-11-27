@@ -151,6 +151,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>REST-ACMECollege-Skeleton</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

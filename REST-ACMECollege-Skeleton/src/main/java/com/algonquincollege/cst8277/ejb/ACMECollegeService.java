@@ -7,7 +7,13 @@
  */
 package com.algonquincollege.cst8277.ejb;
 
+import static com.algonquincollege.cst8277.entity.Course.ALL_COURSES_QUERY;
+import static com.algonquincollege.cst8277.entity.CourseRegistration.ALL_COURSE_REGISTRATIONS_QUERY_NAME;
+import static com.algonquincollege.cst8277.entity.CourseRegistration.QUERY_SPECIFIC_COURSE_REGISTRATION;
+import static com.algonquincollege.cst8277.entity.Professor.ALL_PROFESSORS_QUERY;
+import static com.algonquincollege.cst8277.entity.SecurityRole.SECURITY_ROLE_BY_NAME;
 import static com.algonquincollege.cst8277.entity.Student.ALL_STUDENTS_QUERY_NAME;
+import static com.algonquincollege.cst8277.entity.StudentClub.ALL_STUDENT_CLUBS_QUERY;
 import static com.algonquincollege.cst8277.utility.MyConstants.DEFAULT_KEY_SIZE;
 import static com.algonquincollege.cst8277.utility.MyConstants.DEFAULT_PROPERTY_ALGORITHM;
 import static com.algonquincollege.cst8277.utility.MyConstants.DEFAULT_PROPERTY_ITERATIONS;
@@ -15,6 +21,7 @@ import static com.algonquincollege.cst8277.utility.MyConstants.DEFAULT_SALT_SIZE
 import static com.algonquincollege.cst8277.utility.MyConstants.DEFAULT_USER_PASSWORD;
 import static com.algonquincollege.cst8277.utility.MyConstants.DEFAULT_USER_PREFIX;
 import static com.algonquincollege.cst8277.utility.MyConstants.PARAM1;
+import static com.algonquincollege.cst8277.utility.MyConstants.PARAM2;
 import static com.algonquincollege.cst8277.utility.MyConstants.PROPERTY_ALGORITHM;
 import static com.algonquincollege.cst8277.utility.MyConstants.PROPERTY_ITERATIONS;
 import static com.algonquincollege.cst8277.utility.MyConstants.PROPERTY_KEY_SIZE;
@@ -67,6 +74,7 @@ public class ACMECollegeService implements Serializable {
     private static final Logger LOG = LogManager.getLogger();
     
     private static final String READ_ALL_PROGRAMS = "SELECT name FROM program";
+    private static final String READ_ALL_LETTER_GRADES = "SELECT grade FROM letter_grade";
     //TODO ACMECS01 - Add your query constants here.
     
     @PersistenceContext(name = PU_NAME)
@@ -94,9 +102,18 @@ public class ACMECollegeService implements Serializable {
 
     @Transactional
     public void buildUserForNewStudent(Student newStudent) {
+        String username = DEFAULT_USER_PREFIX + "_" + newStudent.getFirstName() + "." + newStudent.getLastName();
+        
+        // Check if username already exists
+        TypedQuery<SecurityUser> usernameQuery = em.createNamedQuery(SecurityUser.SECURITY_USER_BY_NAME, SecurityUser.class);
+        usernameQuery.setParameter(PARAM1, username);
+        List<SecurityUser> existingUsers = usernameQuery.getResultList();
+        if (!existingUsers.isEmpty()) {
+            throw new RuntimeException("Student with name '" + newStudent.getFirstName() + " " + newStudent.getLastName() + "' already exists");
+        }
+        
         SecurityUser userForNewStudent = new SecurityUser();
-        userForNewStudent.setUsername(
-            DEFAULT_USER_PREFIX + "_" + newStudent.getFirstName() + "." + newStudent.getLastName());
+        userForNewStudent.setUsername(username);
         Map<String, String> pbAndjProperties = new HashMap<>();
         pbAndjProperties.put(PROPERTY_ALGORITHM, DEFAULT_PROPERTY_ALGORITHM);
         pbAndjProperties.put(PROPERTY_ITERATIONS, DEFAULT_PROPERTY_ITERATIONS);
@@ -106,7 +123,10 @@ public class ACMECollegeService implements Serializable {
         String pwHash = pbAndjPasswordHash.generate(DEFAULT_USER_PASSWORD.toCharArray());
         userForNewStudent.setPwHash(pwHash);
         userForNewStudent.setStudent(newStudent);
-        SecurityRole userRole = /* TODO ACMEMS01 - Use NamedQuery on SecurityRole to find USER_ROLE */ null;
+        /* TODO ACMEMS01 - Use NamedQuery on SecurityRole to find USER_ROLE */
+        TypedQuery<SecurityRole> query = em.createNamedQuery(SECURITY_ROLE_BY_NAME, SecurityRole.class);
+        query.setParameter(PARAM1, USER_ROLE);
+        SecurityRole userRole = query.getSingleResult();
         userForNewStudent.getRoles().add(userRole);
         userRole.getUsers().add(userForNewStudent);
         em.persist(userForNewStudent);
@@ -164,6 +184,209 @@ public class ACMECollegeService implements Serializable {
 
 	//TODO ACMECS02 - Add the rest of your CRUD methods here.
 	
-	
+	public List<Course> getAllCourses() {
+		TypedQuery<Course> query = em.createNamedQuery(ALL_COURSES_QUERY, Course.class);
+		return query.getResultList();
+	}
+
+	public Course getCourseById(int id) {
+		return em.find(Course.class, id);
+	}
+
+	@Transactional
+	public Course persistCourse(Course newCourse) {
+		em.persist(newCourse);
+		return newCourse;
+	}
+
+	@Transactional
+	public Course updateCourseById(int id, Course courseWithUpdates) {
+		Course courseToBeUpdated = getCourseById(id);
+		if (courseToBeUpdated != null) {
+			em.refresh(courseToBeUpdated);
+			em.merge(courseWithUpdates);
+			em.flush();
+		}
+		return courseWithUpdates;
+	}
+
+	@Transactional
+	public Course deleteCourseById(int id) {
+		Course course = getCourseById(id);
+		if (course != null) {
+			em.refresh(course);
+			em.remove(course);
+		}
+		return course;
+	}
+
+	public List<Professor> getAllProfessors() {
+		TypedQuery<Professor> query = em.createNamedQuery(ALL_PROFESSORS_QUERY, Professor.class);
+		return query.getResultList();
+	}
+
+	public Professor getProfessorById(int id) {
+		return em.find(Professor.class, id);
+	}
+
+	@Transactional
+	public Professor persistProfessor(Professor newProfessor) {
+		em.persist(newProfessor);
+		return newProfessor;
+	}
+
+	@Transactional
+	public Professor updateProfessorById(int id, Professor professorWithUpdates) {
+		Professor professorToBeUpdated = getProfessorById(id);
+		if (professorToBeUpdated != null) {
+			em.refresh(professorToBeUpdated);
+			em.merge(professorWithUpdates);
+			em.flush();
+		}
+		return professorWithUpdates;
+	}
+
+	@Transactional
+	public Professor deleteProfessorById(int id) {
+		Professor professor = getProfessorById(id);
+		if (professor != null) {
+			em.refresh(professor);
+			em.remove(professor);
+		}
+		return professor;
+	}
+
+	public List<StudentClub> getAllStudentClubs() {
+		TypedQuery<StudentClub> query = em.createNamedQuery(ALL_STUDENT_CLUBS_QUERY, StudentClub.class);
+		return query.getResultList();
+	}
+
+	public StudentClub getStudentClubById(int id) {
+		return em.find(StudentClub.class, id);
+	}
+
+	@Transactional
+	public StudentClub persistStudentClub(StudentClub newStudentClub) {
+		em.persist(newStudentClub);
+		return newStudentClub;
+	}
+
+	@Transactional
+	public StudentClub updateStudentClubById(int id, StudentClub studentClubWithUpdates) {
+		StudentClub studentClubToBeUpdated = getStudentClubById(id);
+		if (studentClubToBeUpdated != null) {
+			em.refresh(studentClubToBeUpdated);
+			em.merge(studentClubWithUpdates);
+			em.flush();
+		}
+		return studentClubWithUpdates;
+	}
+
+	@Transactional
+	public StudentClub deleteStudentClubById(int id) {
+		StudentClub studentClub = getStudentClubById(id);
+		if (studentClub != null) {
+			em.refresh(studentClub);
+			em.remove(studentClub);
+		}
+		return studentClub;
+	}
+
+	@Transactional
+	public StudentClub addStudentToClub(int studentId, int clubId) {
+		Student student = getStudentById(studentId);
+		StudentClub club = getStudentClubById(clubId);
+		if (student == null || club == null) {
+			return null;
+		}
+		student.getStudentClubs().add(club);
+		club.getStudentMembers().add(student);
+		em.merge(student);
+		em.merge(club);
+		em.flush();
+		return club;
+	}
+
+	@Transactional
+	public boolean removeStudentFromClub(int studentId, int clubId) {
+		Student student = getStudentById(studentId);
+		StudentClub club = getStudentClubById(clubId);
+		if (student == null || club == null) {
+			return false;
+		}
+		boolean removed = student.getStudentClubs().remove(club);
+		club.getStudentMembers().remove(student);
+		if (removed) {
+			em.merge(student);
+			em.merge(club);
+			em.flush();
+		}
+		return removed;
+	}
+
+	public List<CourseRegistration> getAllCourseRegistrations() {
+		TypedQuery<CourseRegistration> query = em.createNamedQuery(ALL_COURSE_REGISTRATIONS_QUERY_NAME, CourseRegistration.class);
+		return query.getResultList();
+	}
+
+	public CourseRegistration getCourseRegistrationById(int studentId, int courseId) {
+		TypedQuery<CourseRegistration> query = em.createNamedQuery(QUERY_SPECIFIC_COURSE_REGISTRATION, CourseRegistration.class);
+		query.setParameter(PARAM1, studentId);
+		query.setParameter(PARAM2, courseId);
+		try {
+			return query.getSingleResult();
+		} catch (jakarta.persistence.NoResultException e) {
+			return null;
+		}
+	}
+
+	@Transactional
+	public CourseRegistration persistCourseRegistration(CourseRegistration newCourseRegistration) {
+		CourseRegistration merged = em.merge(newCourseRegistration);
+		em.flush();
+		return merged;
+	}
+
+	@Transactional
+	public CourseRegistration assignProfessorToCourseRegistration(int studentId, int courseId, Professor professor) {
+		CourseRegistration courseRegistration = getCourseRegistrationById(studentId, courseId);
+		if (courseRegistration != null) {
+			courseRegistration.setProfessor(professor);
+			em.merge(courseRegistration);
+			em.flush();
+		}
+		return courseRegistration;
+	}
+
+	@Transactional
+	public CourseRegistration assignGradeToCourseRegistration(int studentId, int courseId, String letterGrade) {
+		CourseRegistration courseRegistration = getCourseRegistrationById(studentId, courseId);
+		if (courseRegistration != null) {
+			courseRegistration.setLetterGrade(letterGrade);
+			em.merge(courseRegistration);
+			em.flush();
+		}
+		return courseRegistration;
+	}
+
+	@Transactional
+	public CourseRegistration deleteCourseRegistrationById(int studentId, int courseId) {
+		CourseRegistration courseRegistration = getCourseRegistrationById(studentId, courseId);
+		if (courseRegistration != null) {
+			em.refresh(courseRegistration);
+			em.remove(courseRegistration);
+		}
+		return courseRegistration;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getAllLetterGrades() {
+		List<String> letterGrades = new ArrayList<>();
+		try {
+			letterGrades = (List<String>) em.createNativeQuery(READ_ALL_LETTER_GRADES).getResultList();
+		} catch (Exception e) {
+		}
+		return letterGrades;
+	}
 	
 }

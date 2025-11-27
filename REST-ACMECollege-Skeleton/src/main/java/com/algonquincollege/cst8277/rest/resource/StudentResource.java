@@ -41,6 +41,7 @@ import org.glassfish.soteria.WrappingCallerPrincipal;
 import com.algonquincollege.cst8277.ejb.ACMECollegeService;
 import com.algonquincollege.cst8277.entity.SecurityUser;
 import com.algonquincollege.cst8277.entity.Student;
+import com.algonquincollege.cst8277.rest.resource.HttpErrorResponse;
 
 @Path(STUDENT_RESOURCE_NAME)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -94,15 +95,19 @@ public class StudentResource {
     }
 
     @POST
-    //Only a user with the SecurityRole ‘ADMIN_ROLE’ can add a new student.
+    //Only a user with the SecurityRole 'ADMIN_ROLE' can add a new student.
     @RolesAllowed({ADMIN_ROLE})
     public Response addStudent(Student newStudent) {
-        Response response = null;
-        Student newStudentWithIdTimestamps = service.persistStudent(newStudent);
-        // Build a SecurityUser linked to the new student
-        service.buildUserForNewStudent(newStudentWithIdTimestamps);
-        response = Response.ok(newStudentWithIdTimestamps).build();
-        return response;
+        try {
+            Student newStudentWithIdTimestamps = service.persistStudent(newStudent);
+            // Build a SecurityUser linked to the new student
+            service.buildUserForNewStudent(newStudentWithIdTimestamps);
+            return Response.ok(newStudentWithIdTimestamps).build();
+        } catch (RuntimeException e) {
+            return Response.status(Status.CONFLICT)
+                .entity(new HttpErrorResponse(409, e.getMessage()))
+                .build();
+        }
     }
 
     @PUT

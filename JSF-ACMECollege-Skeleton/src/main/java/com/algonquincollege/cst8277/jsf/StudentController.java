@@ -37,6 +37,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import com.algonquincollege.cst8277.utility.MyConstants;
 import com.algonquincollege.cst8277.entity.Student;
 import com.algonquincollege.cst8277.rest.resource.MyObjectMapperProvider;
+import com.algonquincollege.cst8277.rest.resource.HttpErrorResponse;
 
 @Named("studentController")
 @SessionScoped
@@ -168,8 +169,14 @@ public class StudentController implements Serializable, MyConstants {
                 .path(STUDENT_RESOURCE_NAME)
                 .request()
                 .post(Entity.json(theNewStudent));
-        Student newStudent = response.readEntity(Student.class);
-        listOfStudents.add(newStudent);
+        
+        if (response.getStatus() == 409) {
+            HttpErrorResponse error = response.readEntity(HttpErrorResponse.class);
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, error.getReasonPhrase(), null));
+        } else {
+            Student newStudent = response.readEntity(Student.class);
+            listOfStudents.add(newStudent);
+        }
         return null; //current page
     }
 

@@ -43,7 +43,17 @@ public interface MyConstants {
     public static final String PROGRAM_RESOURCE_PATH = SLASH + "program";
     
     //TODO MC01 - Add your own constants here.
-
+    public static final String COURSE_RESOURCE_NAME = "course";
+    public static final String PROFESSOR_RESOURCE_NAME = "professor";
+    public static final String STUDENT_CLUB_RESOURCE_NAME = "studentclub";
+    public static final String COURSE_REGISTRATION_RESOURCE_NAME = "courseregistration";
+    public static final String LETTER_GRADE_RESOURCE_PATH = SLASH + "lettergrade";
+    public static final String STUDENT_ID_ELEMENT = "studentId";
+    public static final String COURSE_ID_ELEMENT = "courseId";
+    public static final String STUDENT_COURSE_REGISTRATION_RESOURCE_PATH = SLASH + "student" + SLASH + "{" + STUDENT_ID_ELEMENT + "}" + SLASH + "course" + SLASH + "{" + COURSE_ID_ELEMENT + "}";
+    public static final String CLUB_ID_ELEMENT = "clubId";
+    public static final String CLUB_MEMBERSHIP_RESOURCE_NAME = "clubmembership";
+    public static final String STUDENT_CLUB_MEMBERSHIP_PATH = SLASH + "student" + SLASH + "{" + STUDENT_ID_ELEMENT + "}" + SLASH + "club" + SLASH + "{" + CLUB_ID_ELEMENT + "}";
     
     
     public static final String ACCESS_REQUIRES_AUTHENTICATION =
@@ -75,5 +85,6 @@ public interface MyConstants {
     // JPA constants
     public static final String PU_NAME = "acmecollege-PU";
     public static final String PARAM1 = "param1";
+    public static final String PARAM2 = "param2";
 
 }
