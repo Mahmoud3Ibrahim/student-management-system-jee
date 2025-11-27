@@ -40,19 +40,19 @@ public class SecurityRole implements Serializable {
     
 	public static final String SECURITY_ROLE_BY_NAME = "SecurityRole.RoleByName";
 
+    //TODO SR02 - Add annotations.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id", nullable = false)
-    //TODO SR02 - Add annotations.
     protected int id;
     
+    //TODO SR03 - Add annotations.
     @Basic(optional = false)
     @Column(name = "name", nullable = false, length = 45, unique = true)
-    //TODO SR03 - Add annotations.
     protected String roleName;
     
-    @ManyToMany(mappedBy = "roles", fetch = jakarta.persistence.FetchType.LAZY)
     //TODO SR04 - Add annotations.
+    @ManyToMany(mappedBy = "roles", fetch = jakarta.persistence.FetchType.LAZY)
     protected Set<SecurityUser> users = new HashSet<SecurityUser>();
 
     public SecurityRole() {

@@ -46,34 +46,34 @@ public class SecurityUser implements Serializable, Principal {
   public static final String SECURITY_USER_BY_NAME = "SecurityUser.userByName";
   public static final String SECURITY_USER_BY_STUDENT_ID = "SecurityUser.userByStudentId";
 
+  //TODO SU02 - Add annotations.
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id", nullable = false)
-  //TODO SU02 - Add annotations.
   protected int id;
   
+  //TODO SU03 - Add annotations.
   @Basic(optional = false)
   @Column(name = "username", nullable = false, length = 100, unique = true)
-  //TODO SU03 - Add annotations.
   protected String username;
   
+  //TODO SU04 - Add annotations.
   @Basic(optional = false)
   @Column(name = "password_hash", nullable = false, length = 256)
-  //TODO SU04 - Add annotations.
   protected String pwHash;
   
+  //TODO SU05 - Add annotations.
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "student_id", referencedColumnName = "id")
-  //TODO SU05 - Add annotations.
   protected Student student;
   
+  //TODO SU06 - Add annotations.
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
   @JoinTable(
       name = "user_has_role",
       joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id")
   )
-  //TODO SU06 - Add annotations.
   protected Set<SecurityRole> roles = new HashSet<SecurityRole>();
 
   public SecurityUser() {
@@ -104,8 +104,8 @@ public class SecurityUser implements Serializable, Principal {
       this.pwHash = pwHash;
   }
 
-  @JsonSerialize(using = SecurityRoleSerializer.class)
   // TODO SU07 - Setup to use custom JSON serializer called SecurityRoleSerializer
+  @JsonSerialize(using = SecurityRoleSerializer.class)
   public Set<SecurityRole> getRoles() {
       return roles;
   }

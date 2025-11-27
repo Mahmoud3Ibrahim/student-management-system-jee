@@ -42,29 +42,29 @@ public class Professor extends PojoBase implements Serializable {
 	
 	public static final String ALL_PROFESSORS_QUERY = "Professor.findAll";
 
+	// TODO P03 - Add annotations.
 	@Basic(optional = false)
 	@Column(name = "first_name", nullable = false, length = 50)
-	// TODO P03 - Add annotations.
 	protected String firstName;
 
+	// TODO P04 - Add annotations.
 	@Basic(optional = false)
 	@Column(name = "last_name", nullable = false, length = 50)
-	// TODO P04 - Add annotations.
 	protected String lastName;
 
+	// TODO P05 - Add annotations.
 	@Basic(optional = true)
 	@Column(name = "degree", nullable = true, length = 45)
-	// TODO P05 - Add annotations.
 	protected String degree;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "professor")
-	@JsonIgnore
 	// TODO P06 - Add annotations for 1:M relation.  What should be the cascade and fetch types?
 	// TODO P07 - Add other missing annotations.
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "professor")
+	@JsonIgnore
 	protected Set<CourseRegistration> courseRegistrations = new HashSet<>();
 	
-	@Transient
 	// TODO P08 - Add annotations.
+	@Transient
 	protected boolean editable = false;
 
 	public Professor() {
@@ -95,8 +95,8 @@ public class Professor extends PojoBase implements Serializable {
 		this.degree = degree;
 	}
 
-	@JsonIgnore
 	// TODO P09 - Is an annotation needed here?
+	@JsonIgnore
 	public Set<CourseRegistration> getCourseRegistrations() {
 		return courseRegistrations;
 	}
