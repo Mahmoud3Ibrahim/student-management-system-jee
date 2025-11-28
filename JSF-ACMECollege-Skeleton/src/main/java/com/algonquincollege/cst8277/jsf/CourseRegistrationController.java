@@ -65,6 +65,8 @@ public class CourseRegistrationController implements Serializable, MyConstants {
     protected List<Course> courses;
     protected List<Professor> professors;
     protected List<String> letterGrades;
+    protected List<Integer> yearOptions;
+    protected List<String> semesterOptions;
     protected boolean adding;
     protected ResourceBundle bundle;
     
@@ -106,6 +108,8 @@ public class CourseRegistrationController implements Serializable, MyConstants {
         loadCourses();
         loadProfessors();
         loadLetterGrades();
+        yearOptions = List.of(2025, 2026, 2027, 2028, 2029, 2030);
+        semesterOptions = List.of("FALL", "WINTER", "SPRING", "SUMMER");
     }
 
     public List<CourseRegistration> getRegistrations() {
@@ -191,6 +195,14 @@ public class CourseRegistrationController implements Serializable, MyConstants {
                 .request()
                 .get();
         letterGrades = response.readEntity(new GenericType<List<String>>(){});
+    }
+
+    public List<Integer> getYearOptions() {
+        return yearOptions;
+    }
+
+    public List<String> getSemesterOptions() {
+        return semesterOptions;
     }
 
     public boolean isAdding() {

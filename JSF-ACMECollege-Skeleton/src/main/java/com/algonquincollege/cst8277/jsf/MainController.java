@@ -82,7 +82,20 @@ public class MainController implements Serializable, MyConstants {
     		break;
     		case STUDENT_CLUB_MANAGEMENT: studentClubController.loadClubs();
     		break;
-    		case COURSE_REGISTRATION: courseRegistrationController.loadRegistrations();
+    		case COURSE_REGISTRATION: 
+    			courseRegistrationController.loadRegistrations();
+    			courseRegistrationController.loadStudents();
+    			courseRegistrationController.loadCourses();
+    		break;
+    		case ASSIGN_PROFESSOR:
+    			courseRegistrationController.loadStudents();
+    			courseRegistrationController.loadCourses();
+    			courseRegistrationController.loadProfessors();
+    		break;
+    		case ASSIGN_GRADE:
+    			courseRegistrationController.loadStudents();
+    			courseRegistrationController.loadCourses();
+    			courseRegistrationController.loadLetterGrades();
     		break;
     		case CLUB_MEMBERSHIP_REGISTRATION: clubMembershipController.loadStudents(); clubMembershipController.loadClubs();
     		break;

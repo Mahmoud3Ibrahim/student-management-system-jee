@@ -156,6 +156,92 @@
             <h:commandButton value="#{uiconsts['submitLabel']}" action="#{mainController.submitForm()}" /> 
           </h:form>
         </h:panelGroup>
+
+        <!-- panel group for assign professor -->
+        <h:panelGroup rendered="#{(externalContext.userPrincipal ne null) and (mainController.optionChosen == 'Assign Professor')}"> 
+          <h:panelGroup rendered="#{request.isUserInRole('ADMIN_ROLE')}">
+            <h:form id="assignProfessorForm">
+              <h3>#{uiconsts['assignProfessorTitle']}</h3>
+              <h:panelGrid columns="2" cellpadding="10">
+                <h:panelGroup class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user fa-fw"/></span>
+                  </div>
+                  <h:selectOneMenu id="assignProfStudentId" styleClass="form-control placeholder-darkgray"
+                    value="#{courseRegistrationController.selectedStudentIdForAssign}">
+                    <f:selectItem itemLabel="#{uiconsts['selectStudentLabel']}" itemValue="0" />
+                    <f:selectItems value="#{courseRegistrationController.students}" var="student" itemLabel="#{student.firstName} #{student.lastName} (ID: #{student.id})" itemValue="#{student.id}"/>
+                  </h:selectOneMenu>
+                </h:panelGroup>
+                <h:panelGroup class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-book fa-fw"/></span>
+                  </div>
+                  <h:selectOneMenu id="assignProfCourseId" styleClass="form-control placeholder-darkgray"
+                    value="#{courseRegistrationController.selectedCourseIdForAssign}">
+                    <f:selectItem itemLabel="#{uiconsts['selectCourseLabel']}" itemValue="0" />
+                    <f:selectItems value="#{courseRegistrationController.courses}" var="course" itemLabel="#{course.courseCode} - #{course.courseTitle}" itemValue="#{course.id}"/>
+                  </h:selectOneMenu>
+                </h:panelGroup>
+                <h:panelGroup class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-chalkboard-teacher fa-fw"/></span>
+                  </div>
+                  <h:selectOneMenu id="assignProfProfessorId" styleClass="form-control placeholder-darkgray"
+                    value="#{courseRegistrationController.selectedProfessorIdForAssign}">
+                    <f:selectItem itemLabel="#{uiconsts['selectProfessorLabel']}" itemValue="0" />
+                    <f:selectItems value="#{courseRegistrationController.professors}" var="prof" itemLabel="#{prof.firstName} #{prof.lastName} (ID: #{prof.id})" itemValue="#{prof.id}"/>
+                  </h:selectOneMenu>
+                </h:panelGroup>
+                <h:commandButton value="#{uiconsts['assignProfessorButton']}" action="#{courseRegistrationController.assignProfessor(courseRegistrationController.selectedStudentIdForAssign, courseRegistrationController.selectedCourseIdForAssign, courseRegistrationController.selectedProfessorIdForAssign)}" styleClass="btn btn-primary" />
+              </h:panelGrid>
+            </h:form>
+          </h:panelGroup>
+          <h:messages globalOnly="true" layout="table" styleClass="alert alert-danger"/>
+        </h:panelGroup>
+
+        <!-- panel group for assign grade -->
+        <h:panelGroup rendered="#{(externalContext.userPrincipal ne null) and (mainController.optionChosen == 'Assign Grade')}"> 
+          <h:panelGroup rendered="#{request.isUserInRole('ADMIN_ROLE')}">
+            <h:form id="assignGradeForm">
+              <h3>#{uiconsts['assignGradeTitle']}</h3>
+              <h:panelGrid columns="2" cellpadding="10">
+                <h:panelGroup class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user fa-fw"/></span>
+                  </div>
+                  <h:selectOneMenu id="assignGradeStudentId" styleClass="form-control placeholder-darkgray"
+                    value="#{courseRegistrationController.selectedStudentIdForGrade}">
+                    <f:selectItem itemLabel="#{uiconsts['selectStudentLabel']}" itemValue="0" />
+                    <f:selectItems value="#{courseRegistrationController.students}" var="student" itemLabel="#{student.firstName} #{student.lastName} (ID: #{student.id})" itemValue="#{student.id}"/>
+                  </h:selectOneMenu>
+                </h:panelGroup>
+                <h:panelGroup class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-book fa-fw"/></span>
+                  </div>
+                  <h:selectOneMenu id="assignGradeCourseId" styleClass="form-control placeholder-darkgray"
+                    value="#{courseRegistrationController.selectedCourseIdForGrade}">
+                    <f:selectItem itemLabel="#{uiconsts['selectCourseLabel']}" itemValue="0" />
+                    <f:selectItems value="#{courseRegistrationController.courses}" var="course" itemLabel="#{course.courseCode} - #{course.courseTitle}" itemValue="#{course.id}"/>
+                  </h:selectOneMenu>
+                </h:panelGroup>
+                <h:panelGroup class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-graduation-cap fa-fw"/></span>
+                  </div>
+                  <h:selectOneMenu id="assignGradeLetterGrade" styleClass="form-control placeholder-darkgray"
+                    value="#{courseRegistrationController.selectedLetterGrade}">
+                    <f:selectItem itemLabel="#{uiconsts['selectGradeLabel']}" itemValue="" />
+                    <f:selectItems value="#{courseRegistrationController.letterGrades}" />
+                  </h:selectOneMenu>
+                </h:panelGroup>
+                <h:commandButton value="#{uiconsts['assignGradeButton']}" action="#{courseRegistrationController.assignGrade(courseRegistrationController.selectedStudentIdForGrade, courseRegistrationController.selectedCourseIdForGrade, courseRegistrationController.selectedLetterGrade)}" styleClass="btn btn-primary" />
+              </h:panelGrid>
+            </h:form>
+          </h:panelGroup>
+          <h:messages globalOnly="true" layout="table" styleClass="alert alert-danger"/>
+        </h:panelGroup>
       
         <!-- panel group for student management -->
         <h:panelGroup rendered="#{(externalContext.userPrincipal ne null) and (mainController.optionChosen == 'Student Management')}"> 
@@ -854,22 +940,24 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="year-addon"><i class="fa fa-calendar fa-fw"/></span>
                     </div>
-                    <h:inputText type="number" id="new_year" styleClass="form-control placeholder-darkgray"
+                    <h:selectOneMenu id="new_year" styleClass="form-control placeholder-darkgray"
                       aria-describedby="year-addon"
-                      value="#{newCourseRegistration.year}" a:placeholder="#{uiconsts['placeholder_Year']}">
-                      <f:validateLongRange minimum="2000" maximum="2100" />
-                    </h:inputText>
+                      value="#{newCourseRegistration.year}">
+                      <f:selectItem itemLabel="#{uiconsts['selectYearLabel']}" itemValue="0" />
+                      <f:selectItems value="#{courseRegistrationController.yearOptions}" var="year" itemLabel="#{year}" itemValue="#{year}" />
+                    </h:selectOneMenu>
                   </h:panelGroup>
                   <h:message for="new_year" style="color:red" />
                   <h:panelGroup class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="semester-addon"><i class="fa fa-calendar-alt fa-fw"/></span>
                     </div>
-                    <h:inputText type="text" id="new_semester" styleClass="form-control placeholder-darkgray"
+                    <h:selectOneMenu id="new_semester" styleClass="form-control placeholder-darkgray"
                       aria-describedby="semester-addon"
-                      value="#{newCourseRegistration.semester}" a:placeholder="#{uiconsts['placeholder_Semester']}">
-                      <f:validateLength minimum="1" maximum="20" />
-                    </h:inputText>
+                      value="#{newCourseRegistration.semester}">
+                      <f:selectItem itemLabel="#{uiconsts['selectSemesterLabel']}" itemValue="" />
+                      <f:selectItems value="#{courseRegistrationController.semesterOptions}" var="sem" itemLabel="#{sem}" itemValue="#{sem}" />
+                    </h:selectOneMenu>
                   </h:panelGroup>
                   <h:message for="new_semester" style="color:red" />
                 </h:panelGrid>
@@ -885,104 +973,6 @@
               </h:panelGroup>
             </h:form>
             <br/>
-          </h:panelGroup>
-          <h:form id="courseRegistrationList">
-            <h:panelGroup rendered="#{externalContext.userPrincipal ne null}" >
-              <h:dataTable value="#{courseRegistrationController.registrations}" var="registration"
-                styleClass="table table-striped table-bordered table-hover"
-                headerClass="thead-light"
-                captionClass="text-center">
-                <h:column>
-                  <f:facet name="header">#{uiconsts['columnLabel_StudentId']}</f:facet>
-                  <h:outputText value="#{registration.id.studentId}" style="color:#000;" />
-                </h:column>
-                <h:column>
-                  <f:facet name="header">#{uiconsts['columnLabel_CourseId']}</f:facet>
-                  <h:outputText value="#{registration.id.courseId}" style="color:#000;" />
-                </h:column>
-                <h:column>
-                  <f:facet name="header">#{uiconsts['columnLabel_Year']}</f:facet>
-                  <h:outputText value="#{registration.year}" style="color:#000;" />
-                </h:column>
-                <h:column>
-                  <f:facet name="header">#{uiconsts['columnLabel_Semester']}</f:facet>
-                  <h:outputText value="#{registration.semester}" style="color:#000;" />
-                </h:column>
-                <h:column>
-                  <f:facet name="header">#{uiconsts['columnLabel_ProfessorId']}</f:facet>
-                  <h:outputText value="#{registration.professor.id}" rendered="#{registration.professor ne null}" />
-                </h:column>
-                <h:column>
-                  <f:facet name="header">#{uiconsts['columnLabel_LetterGrade']}</f:facet>
-                  <h:outputText value="#{registration.letterGrade}" />
-                </h:column>
-                <!-- Action column -->
-                <h:column rendered="#{request.isUserInRole('ADMIN_ROLE')}">
-                  <f:facet name="header">#{uiconsts['columnLabel_Action']}</f:facet>
-                  <h:panelGroup>
-                    <a href="#" data-toggle="modal" data-target="#removeRegistrationModal#{registration.id.studentId}#{registration.id.courseId}"><span class="fa fa-trash fa-fw" style="color:red" />&#xa0;<h:outputText value="#{uiconsts['deleteLabel']}" /></a>
-                    <div class="modal fade" tabindex="-1" role="dialog" id="removeRegistrationModal#{registration.id.studentId}#{registration.id.courseId}">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&#8855;</span></button>
-                          </div>
-                          <div class="modal-body">
-                            <p>#{uiconsts['deleteRegistrationConfirm']} (Student: #{registration.id.studentId}, Course: #{registration.id.courseId})</p>
-                          </div>
-                          <div class="modal-footer">
-                            <div class="form-group last text-right">
-                              <button type="button" class="btn btn-outline-default" data-dismiss="modal">#{uiconsts['cancelLabel']}</button>
-                              <h:panelGroup>
-                                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">#{uiconsts['deleteLabel']}
-                                  <f:ajax event="click" listener="#{courseRegistrationController.deleteRegistration(registration.id.studentId, registration.id.courseId)}" render="@form :courseRegistrationList"/>
-                                </button>
-                              </h:panelGroup>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>        
-                  </h:panelGroup>
-                </h:column>
-              </h:dataTable>
-              <h:panelGroup class="refreshFooter">
-                <h:commandButton value="#{uiconsts['refreshButtonLabel']}" action="#{courseRegistrationController.refreshRegistrationForm()}" /> 
-              </h:panelGroup>
-            </h:panelGroup>
-          </h:form>
-          <h:panelGroup rendered="#{request.isUserInRole('ADMIN_ROLE')}">
-            <h:form id="assignProfessorForm">
-              <h3>#{uiconsts['assignProfessorTitle']}</h3>
-              <h:panelGrid columns="4" cellpadding="5">
-                <h:outputLabel value="#{uiconsts['columnLabel_StudentId']}:" />
-                <h:inputText id="assignProfStudentId" value="#{courseRegistrationController.selectedStudentIdForAssign}" />
-                <h:outputLabel value="#{uiconsts['columnLabel_CourseId']}:" />
-                <h:inputText id="assignProfCourseId" value="#{courseRegistrationController.selectedCourseIdForAssign}" />
-                <h:outputLabel value="#{uiconsts['columnLabel_ProfessorId']}:" />
-                <h:selectOneMenu id="assignProfProfessorId" value="#{courseRegistrationController.selectedProfessorIdForAssign}">
-                  <f:selectItem itemLabel="#{uiconsts['selectProfessorLabel']}" itemValue="0" />
-                  <f:selectItems value="#{courseRegistrationController.professors}" var="prof" itemLabel="#{prof.firstName} #{prof.lastName} (ID: #{prof.id})" itemValue="#{prof.id}"/>
-                </h:selectOneMenu>
-                <h:commandButton value="#{uiconsts['assignProfessorButton']}" action="#{courseRegistrationController.assignProfessor(courseRegistrationController.selectedStudentIdForAssign, courseRegistrationController.selectedCourseIdForAssign, courseRegistrationController.selectedProfessorIdForAssign)}" />
-              </h:panelGrid>
-            </h:form>
-            <br/>
-            <h:form id="assignGradeForm">
-              <h3>#{uiconsts['assignGradeTitle']}</h3>
-              <h:panelGrid columns="4" cellpadding="5">
-                <h:outputLabel value="#{uiconsts['columnLabel_StudentId']}:" />
-                <h:inputText id="assignGradeStudentId" value="#{courseRegistrationController.selectedStudentIdForGrade}" />
-                <h:outputLabel value="#{uiconsts['columnLabel_CourseId']}:" />
-                <h:inputText id="assignGradeCourseId" value="#{courseRegistrationController.selectedCourseIdForGrade}" />
-                <h:outputLabel value="#{uiconsts['columnLabel_LetterGrade']}:" />
-                <h:selectOneMenu id="assignGradeLetterGrade" value="#{courseRegistrationController.selectedLetterGrade}">
-                  <f:selectItem itemLabel="#{uiconsts['selectGradeLabel']}" itemValue="" />
-                  <f:selectItems value="#{courseRegistrationController.letterGrades}" />
-                </h:selectOneMenu>
-                <h:commandButton value="#{uiconsts['assignGradeButton']}" action="#{courseRegistrationController.assignGrade(courseRegistrationController.selectedStudentIdForGrade, courseRegistrationController.selectedCourseIdForGrade, courseRegistrationController.selectedLetterGrade)}" />
-              </h:panelGrid>
-            </h:form>
           </h:panelGroup>
           <h:messages globalOnly="true" layout="table" styleClass="alert alert-danger"/>
         </h:panelGroup>

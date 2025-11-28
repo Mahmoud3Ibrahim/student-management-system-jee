@@ -171,7 +171,10 @@ public class StudentClubController implements Serializable, MyConstants {
                 .request()
                 .post(Entity.json(theNewClub));
         
-        if (response.getStatus() == 409) {
+        if (response.getStatus() == 200) {
+            StudentClub newClub = response.readEntity(StudentClub.class);
+            listOfClubs.add(newClub);
+        } else if (response.getStatus() == 409) {
             try {
                 String errorJson = response.readEntity(String.class);
                 JsonReader reader = Json.createReader(new StringReader(errorJson));
@@ -182,8 +185,16 @@ public class StudentClubController implements Serializable, MyConstants {
                 facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Duplicate entry", null));
             }
         } else {
-            StudentClub newClub = response.readEntity(StudentClub.class);
-            listOfClubs.add(newClub);
+            // Handle other errors (500, 404, etc.)
+            try {
+                String errorJson = response.readEntity(String.class);
+                JsonReader reader = Json.createReader(new StringReader(errorJson));
+                JsonObject errorObj = reader.readObject();
+                String reasonPhrase = errorObj.getString("reason-phrase");
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, reasonPhrase, null));
+            } catch (Exception e) {
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Failed to add club (Status: " + response.getStatus() + ")", null));
+            }
         }
         return null; //current page
     }

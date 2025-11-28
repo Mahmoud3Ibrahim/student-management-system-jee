@@ -79,7 +79,9 @@ public class StudentClubResource {
     public Response addStudentClub(StudentClub newStudentClub) {
         try {
             StudentClub newStudentClubWithIdTimestamps = service.persistStudentClub(newStudentClub);
-            return Response.ok(newStudentClubWithIdTimestamps).build();
+            return Response.ok(newStudentClubWithIdTimestamps)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
         } catch (RuntimeException e) {
             return Response.status(Status.CONFLICT)
                 .type(MediaType.APPLICATION_JSON)
@@ -94,7 +96,9 @@ public class StudentClubResource {
     public Response updateStudentClubById(@PathParam(RESOURCE_PATH_ID_ELEMENT) int id, StudentClub studentClubWithUpdates) {
         Response response = null;
         StudentClub updatedStudentClub = service.updateStudentClubById(id, studentClubWithUpdates);
-        response = Response.ok(updatedStudentClub).build();
+        response = Response.ok(updatedStudentClub)
+            .type(MediaType.APPLICATION_JSON)
+            .build();
         return response;
     }
     
