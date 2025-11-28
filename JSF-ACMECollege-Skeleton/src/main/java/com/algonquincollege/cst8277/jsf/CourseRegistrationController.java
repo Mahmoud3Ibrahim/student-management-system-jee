@@ -108,8 +108,8 @@ public class CourseRegistrationController implements Serializable, MyConstants {
         loadCourses();
         loadProfessors();
         loadLetterGrades();
+        loadSemesters();
         yearOptions = List.of(2025, 2026, 2027, 2028, 2029, 2030);
-        semesterOptions = List.of("FALL", "WINTER", "SPRING", "SUMMER");
     }
 
     public List<CourseRegistration> getRegistrations() {
@@ -197,11 +197,23 @@ public class CourseRegistrationController implements Serializable, MyConstants {
         letterGrades = response.readEntity(new GenericType<List<String>>(){});
     }
 
+    public void loadSemesters() {
+    	Response response = webTarget
+                .register(auth)
+                .path(COURSE_REGISTRATION_RESOURCE_NAME + "/semester")
+                .request()
+                .get();
+        semesterOptions = response.readEntity(new GenericType<List<String>>(){});
+    }
+
     public List<Integer> getYearOptions() {
         return yearOptions;
     }
 
     public List<String> getSemesterOptions() {
+        if (semesterOptions == null) {
+            loadSemesters();
+        }
         return semesterOptions;
     }
 
@@ -284,12 +296,25 @@ public class CourseRegistrationController implements Serializable, MyConstants {
                 .path(COURSE_REGISTRATION_RESOURCE_NAME + "/student/" + studentId + "/course/" + courseId)
                 .request()
                 .put(Entity.json(professor));
-        CourseRegistration updatedRegistration = response.readEntity(CourseRegistration.class);
-        if (updatedRegistration != null) {
-            int idx = listOfRegistrations.indexOf(updatedRegistration);
-            if (idx >= 0) {
-                listOfRegistrations.remove(idx);
-                listOfRegistrations.add(idx, updatedRegistration);
+        
+        if (response.getStatus() == 200) {
+            CourseRegistration updatedRegistration = response.readEntity(CourseRegistration.class);
+            if (updatedRegistration != null) {
+                int idx = listOfRegistrations.indexOf(updatedRegistration);
+                if (idx >= 0) {
+                    listOfRegistrations.remove(idx);
+                    listOfRegistrations.add(idx, updatedRegistration);
+                }
+            }
+        } else {
+            try {
+                String errorJson = response.readEntity(String.class);
+                JsonReader reader = Json.createReader(new StringReader(errorJson));
+                JsonObject errorObj = reader.readObject();
+                String reasonPhrase = errorObj.getString("reason-phrase");
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, reasonPhrase, null));
+            } catch (Exception e) {
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Failed to assign professor (Status: " + response.getStatus() + ")", null));
             }
         }
         return null; //current page
@@ -301,12 +326,25 @@ public class CourseRegistrationController implements Serializable, MyConstants {
                 .path(COURSE_REGISTRATION_RESOURCE_NAME + "/student/" + studentId + "/course/" + courseId + LETTER_GRADE_RESOURCE_PATH)
                 .request()
                 .put(Entity.json(letterGrade));
-        CourseRegistration updatedRegistration = response.readEntity(CourseRegistration.class);
-        if (updatedRegistration != null) {
-            int idx = listOfRegistrations.indexOf(updatedRegistration);
-            if (idx >= 0) {
-                listOfRegistrations.remove(idx);
-                listOfRegistrations.add(idx, updatedRegistration);
+        
+        if (response.getStatus() == 200) {
+            CourseRegistration updatedRegistration = response.readEntity(CourseRegistration.class);
+            if (updatedRegistration != null) {
+                int idx = listOfRegistrations.indexOf(updatedRegistration);
+                if (idx >= 0) {
+                    listOfRegistrations.remove(idx);
+                    listOfRegistrations.add(idx, updatedRegistration);
+                }
+            }
+        } else {
+            try {
+                String errorJson = response.readEntity(String.class);
+                JsonReader reader = Json.createReader(new StringReader(errorJson));
+                JsonObject errorObj = reader.readObject();
+                String reasonPhrase = errorObj.getString("reason-phrase");
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, reasonPhrase, null));
+            } catch (Exception e) {
+                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Failed to assign grade (Status: " + response.getStatus() + ")", null));
             }
         }
         return null; //current page

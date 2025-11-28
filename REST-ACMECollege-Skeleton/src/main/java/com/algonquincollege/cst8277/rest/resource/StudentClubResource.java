@@ -77,11 +77,24 @@ public class StudentClubResource {
     // Only a user with the SecurityRole 'ADMIN_ROLE' can add a new student club (Academic or NonAcademic).
     @RolesAllowed({ADMIN_ROLE})
     public Response addStudentClub(StudentClub newStudentClub) {
+        if (newStudentClub == null ||
+                newStudentClub.getName() == null || newStudentClub.getName().trim().isEmpty() ||
+                newStudentClub.getDesc() == null || newStudentClub.getDesc().trim().isEmpty()) {
+            return Response.status(Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new HttpErrorResponse(400, "Name and description cannot be null or empty"))
+                    .build();
+        }
         try {
             StudentClub newStudentClubWithIdTimestamps = service.persistStudentClub(newStudentClub);
             return Response.ok(newStudentClubWithIdTimestamps)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new HttpErrorResponse(400, e.getMessage()))
+                    .build();
         } catch (RuntimeException e) {
             return Response.status(Status.CONFLICT)
                 .type(MediaType.APPLICATION_JSON)
@@ -94,12 +107,24 @@ public class StudentClubResource {
     @RolesAllowed({ADMIN_ROLE})
     @Path(RESOURCE_PATH_ID_PATH)
     public Response updateStudentClubById(@PathParam(RESOURCE_PATH_ID_ELEMENT) int id, StudentClub studentClubWithUpdates) {
-        Response response = null;
+        if (studentClubWithUpdates == null ||
+                studentClubWithUpdates.getName() == null || studentClubWithUpdates.getName().trim().isEmpty() ||
+                studentClubWithUpdates.getDesc() == null || studentClubWithUpdates.getDesc().trim().isEmpty()) {
+            return Response.status(Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new HttpErrorResponse(400, "Name and description cannot be null or empty"))
+                    .build();
+        }
         StudentClub updatedStudentClub = service.updateStudentClubById(id, studentClubWithUpdates);
-        response = Response.ok(updatedStudentClub)
+        if (updatedStudentClub == null) {
+            return Response.status(Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new HttpErrorResponse(404, "Student club not found"))
+                    .build();
+        }
+        return Response.ok(updatedStudentClub)
             .type(MediaType.APPLICATION_JSON)
             .build();
-        return response;
     }
     
     @DELETE

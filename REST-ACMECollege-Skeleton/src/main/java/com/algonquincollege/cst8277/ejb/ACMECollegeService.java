@@ -76,6 +76,7 @@ public class ACMECollegeService implements Serializable {
     
     private static final String READ_ALL_PROGRAMS = "SELECT name FROM program";
     private static final String READ_ALL_LETTER_GRADES = "SELECT grade FROM letter_grade";
+    private static final String READ_ALL_SEMESTERS = "SELECT name FROM semester ORDER BY name";
     //TODO ACMECS01 - Add your query constants here.
     
     @PersistenceContext(name = PU_NAME)
@@ -287,6 +288,9 @@ public class ACMECollegeService implements Serializable {
 
 	@Transactional
 	public StudentClub persistStudentClub(StudentClub newStudentClub) {
+		if (newStudentClub.getDesc() == null || newStudentClub.getDesc().trim().isEmpty()) {
+			throw new IllegalArgumentException("Description cannot be null or empty");
+		}
 		// Check if club name already exists
 		TypedQuery<StudentClub> nameQuery = em.createNamedQuery(StudentClub.STUDENT_CLUB_BY_NAME, StudentClub.class);
 		nameQuery.setParameter(PARAM1, newStudentClub.getName());
@@ -304,10 +308,15 @@ public class ACMECollegeService implements Serializable {
 		StudentClub studentClubToBeUpdated = getStudentClubById(id);
 		if (studentClubToBeUpdated != null) {
 			em.refresh(studentClubToBeUpdated);
-			em.merge(studentClubWithUpdates);
+			// Copy fields from studentClubWithUpdates to managed entity to avoid null overwrites
+			studentClubToBeUpdated.setName(studentClubWithUpdates.getName());
+			studentClubToBeUpdated.setDesc(studentClubWithUpdates.getDesc());
+			studentClubToBeUpdated.setAcademic(studentClubWithUpdates.getAcademic());
+			em.merge(studentClubToBeUpdated);
 			em.flush();
+			return studentClubToBeUpdated;
 		}
-		return studentClubWithUpdates;
+		return null;
 	}
 
 	@Transactional
@@ -406,7 +415,11 @@ public class ACMECollegeService implements Serializable {
 	public CourseRegistration assignProfessorToCourseRegistration(int studentId, int courseId, Professor professor) {
 		CourseRegistration courseRegistration = getCourseRegistrationById(studentId, courseId);
 		if (courseRegistration != null) {
-			courseRegistration.setProfessor(professor);
+			Professor managedProfessor = em.find(Professor.class, professor.getId());
+			if (managedProfessor == null) {
+				return null;
+			}
+			courseRegistration.setProfessor(managedProfessor);
 			em.merge(courseRegistration);
 			em.flush();
 		}
@@ -442,6 +455,16 @@ public class ACMECollegeService implements Serializable {
 		} catch (Exception e) {
 		}
 		return letterGrades;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getAllSemesters() {
+		List<String> semesters = new ArrayList<>();
+		try {
+			semesters = (List<String>) em.createNativeQuery(READ_ALL_SEMESTERS).getResultList();
+		} catch (Exception e) {
+		}
+		return semesters;
 	}
 	
 }

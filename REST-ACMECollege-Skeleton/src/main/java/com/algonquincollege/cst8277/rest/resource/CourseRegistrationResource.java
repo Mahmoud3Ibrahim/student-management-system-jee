@@ -109,10 +109,22 @@ public class CourseRegistrationResource {
             @PathParam(STUDENT_ID_ELEMENT) int studentId,
             @PathParam(COURSE_ID_ELEMENT) int courseId,
             Professor professor) {
-        Response response = null;
+        if (professor == null || professor.getId() <= 0) {
+            return Response.status(Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new HttpErrorResponse(400, "Professor ID is required and must be greater than 0"))
+                    .build();
+        }
         CourseRegistration updatedCourseRegistration = service.assignProfessorToCourseRegistration(studentId, courseId, professor);
-        response = Response.ok(updatedCourseRegistration).build();
-        return response;
+        if (updatedCourseRegistration == null) {
+            return Response.status(Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new HttpErrorResponse(404, "Course registration or professor not found"))
+                    .build();
+        }
+        return Response.ok(updatedCourseRegistration)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
 
     @PUT
@@ -147,7 +159,21 @@ public class CourseRegistrationResource {
     public Response getLetterGrades() {
         Response response = null;
         List<String> letterGrades = service.getAllLetterGrades();
-        response = Response.ok(letterGrades).build();
+        response = Response.ok(letterGrades)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+        return response;
+    }
+
+    @GET
+    @RolesAllowed({ADMIN_ROLE})
+    @Path("/semester")
+    public Response getSemesters() {
+        Response response = null;
+        List<String> semesters = service.getAllSemesters();
+        response = Response.ok(semesters)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
         return response;
     }
     

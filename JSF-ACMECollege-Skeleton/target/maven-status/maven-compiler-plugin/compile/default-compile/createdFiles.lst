@@ -37,6 +37,7 @@ com\algonquincollege\cst8277\jsf\CourseRegistrationController$3.class
 com\algonquincollege\cst8277\jsf\StudentClubController$1.class
 com\algonquincollege\cst8277\entity\SecurityRole.class
 com\algonquincollege\cst8277\utility\PBKDF2HashGenerator.class
+com\algonquincollege\cst8277\jsf\CourseRegistrationController$6.class
 com\algonquincollege\cst8277\jsf\MainController.class
 com\algonquincollege\cst8277\entity\CourseRegistration.class
 com\algonquincollege\cst8277\entity\SecurityUser.class
