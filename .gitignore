@@ -2,3 +2,8 @@ target/
 *.class
 *.war
 *.log
+*.class
+*.class
+/JSF-ACMECollege-Skeleton/target
+*.class
+*.class
