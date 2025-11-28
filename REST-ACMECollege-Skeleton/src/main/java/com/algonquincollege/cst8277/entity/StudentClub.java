@@ -62,10 +62,12 @@ import com.algonquincollege.cst8277.entity.NonAcademic;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "academic", discriminatorType = DiscriminatorType.INTEGER, columnDefinition = "BIT(1)")
 @NamedQuery(name = StudentClub.ALL_STUDENT_CLUBS_QUERY, query = "SELECT sc FROM StudentClub sc LEFT JOIN FETCH sc.studentMembers")
+@NamedQuery(name = StudentClub.STUDENT_CLUB_BY_NAME, query = "SELECT sc FROM StudentClub sc WHERE sc.name = :param1")
 //TODO SC03 - Do we need a mapped super class?  If so, which one?
 public class StudentClub extends PojoBase {
 	
 	public static final String ALL_STUDENT_CLUBS_QUERY = "StudentClub.findAll";
+	public static final String STUDENT_CLUB_BY_NAME = "StudentClub.findByName";
 
 	// TODO SC04 - Add the missing annotations.
 	@Basic(optional = false)

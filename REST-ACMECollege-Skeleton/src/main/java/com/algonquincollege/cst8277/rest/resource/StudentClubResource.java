@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.algonquincollege.cst8277.ejb.ACMECollegeService;
 import com.algonquincollege.cst8277.entity.StudentClub;
+import com.algonquincollege.cst8277.rest.resource.HttpErrorResponse;
 
 @Path(STUDENT_CLUB_RESOURCE_NAME)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -76,10 +77,15 @@ public class StudentClubResource {
     // Only a user with the SecurityRole 'ADMIN_ROLE' can add a new student club (Academic or NonAcademic).
     @RolesAllowed({ADMIN_ROLE})
     public Response addStudentClub(StudentClub newStudentClub) {
-        Response response = null;
-        StudentClub newStudentClubWithIdTimestamps = service.persistStudentClub(newStudentClub);
-        response = Response.ok(newStudentClubWithIdTimestamps).build();
-        return response;
+        try {
+            StudentClub newStudentClubWithIdTimestamps = service.persistStudentClub(newStudentClub);
+            return Response.ok(newStudentClubWithIdTimestamps).build();
+        } catch (RuntimeException e) {
+            return Response.status(Status.CONFLICT)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new HttpErrorResponse(409, e.getMessage()))
+                .build();
+        }
     }
 
     @PUT

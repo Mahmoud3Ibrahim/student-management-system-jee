@@ -105,6 +105,7 @@ public class StudentResource {
             return Response.ok(newStudentWithIdTimestamps).build();
         } catch (RuntimeException e) {
             return Response.status(Status.CONFLICT)
+                .type(MediaType.APPLICATION_JSON)
                 .entity(new HttpErrorResponse(409, e.getMessage()))
                 .build();
         }

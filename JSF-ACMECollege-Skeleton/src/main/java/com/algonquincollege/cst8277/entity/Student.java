@@ -168,6 +168,7 @@ public class Student extends PojoBase implements Serializable {
 		this.courseRegistrations = courseRegistrations;
 	}
 
+	@JsonIgnore
     public Set<StudentClub> getStudentClubs() {
 		return studentClubs;
 	}

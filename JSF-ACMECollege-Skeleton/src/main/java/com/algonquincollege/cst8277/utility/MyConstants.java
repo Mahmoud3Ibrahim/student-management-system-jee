@@ -49,12 +49,23 @@ public interface MyConstants {
     public static final String REST_APPLICATION_PATH = SLASH + "api" + SLASH + "v1";
 
     // Resource constants
-    public static final String APPLICATION_CONTEXT_ROOT = SLASH + "REST-ACMECollege-Solution";
+    public static final String APPLICATION_CONTEXT_ROOT = SLASH + "REST-ACMECollege-Skeleton";
     public static final String CREDENTIAL_RESOURCE_NAME = "credential";
     public static final String STUDENT_RESOURCE_NAME =  "student";
     public static final String PROGRAM_RESOURCE_PATH = SLASH + "program";
     
     //TODO Add your own resource constants here
+    public static final String COURSE_RESOURCE_NAME = "course";
+    public static final String PROFESSOR_RESOURCE_NAME = "professor";
+    public static final String STUDENT_CLUB_RESOURCE_NAME = "studentclub";
+    public static final String COURSE_REGISTRATION_RESOURCE_NAME = "courseregistration";
+    public static final String LETTER_GRADE_RESOURCE_PATH = SLASH + "lettergrade";
+    public static final String STUDENT_ID_ELEMENT = "studentId";
+    public static final String COURSE_ID_ELEMENT = "courseId";
+    public static final String STUDENT_COURSE_REGISTRATION_RESOURCE_PATH = SLASH + "student" + SLASH + "{" + STUDENT_ID_ELEMENT + "}" + SLASH + "course" + SLASH + "{" + COURSE_ID_ELEMENT + "}";
+    public static final String CLUB_ID_ELEMENT = "clubId";
+    public static final String CLUB_MEMBERSHIP_RESOURCE_NAME = "clubmembership";
+    public static final String STUDENT_CLUB_MEMBERSHIP_PATH = SLASH + "student" + SLASH + "{" + STUDENT_ID_ELEMENT + "}" + SLASH + "club" + SLASH + "{" + CLUB_ID_ELEMENT + "}";
 
     
     

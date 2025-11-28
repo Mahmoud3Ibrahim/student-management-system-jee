@@ -286,6 +286,14 @@ public class ACMECollegeService implements Serializable {
 
 	@Transactional
 	public StudentClub persistStudentClub(StudentClub newStudentClub) {
+		// Check if club name already exists
+		TypedQuery<StudentClub> nameQuery = em.createNamedQuery(StudentClub.STUDENT_CLUB_BY_NAME, StudentClub.class);
+		nameQuery.setParameter(PARAM1, newStudentClub.getName());
+		List<StudentClub> existingClubs = nameQuery.getResultList();
+		if (!existingClubs.isEmpty()) {
+			throw new RuntimeException("Student club with name '" + newStudentClub.getName() + "' already exists");
+		}
+		
 		em.persist(newStudentClub);
 		return newStudentClub;
 	}

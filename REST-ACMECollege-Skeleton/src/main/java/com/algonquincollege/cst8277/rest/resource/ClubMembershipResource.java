@@ -26,6 +26,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 import com.algonquincollege.cst8277.ejb.ACMECollegeService;
 import com.algonquincollege.cst8277.entity.StudentClub;
+import com.algonquincollege.cst8277.rest.resource.HttpErrorResponse;
 
 @Path(CLUB_MEMBERSHIP_RESOURCE_NAME)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -40,12 +41,14 @@ public class ClubMembershipResource {
     public Response addMembership(ClubMembershipRequest request) {
         if (request == null || request.getStudentId() <= 0 || request.getClubId() <= 0) {
             return Response.status(Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(new HttpErrorResponse(400, "studentId and clubId are required"))
                     .build();
         }
         StudentClub club = service.addStudentToClub(request.getStudentId(), request.getClubId());
         if (club == null) {
             return Response.status(Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(new HttpErrorResponse(404, "Student or club not found"))
                     .build();
         }
@@ -61,6 +64,7 @@ public class ClubMembershipResource {
         boolean removed = service.removeStudentFromClub(studentId, clubId);
         if (!removed) {
             return Response.status(Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(new HttpErrorResponse(404, "Membership not found"))
                     .build();
         }

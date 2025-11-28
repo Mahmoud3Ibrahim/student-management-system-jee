@@ -25,18 +25,24 @@ import jakarta.persistence.Version;
  * @param <ID> - type of composite key used
  */
 //TODO PC01 - Add annotation to define this class as superclass of all entities.  Please see lecture slides.
+@MappedSuperclass
 //TODO PC02 - Add annotation to place all JPA annotations on fields.
+@Access(AccessType.FIELD)
 //TODO PC03 - Add annotation for listener class.
+@EntityListeners(PojoCompositeListener.class)
 public abstract class PojoBaseCompositeKey<ID extends Serializable> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// TODO PC04 - Add missing annotations.
+	@Version
 	protected int version;
 
 	// TODO PC05 - Add missing annotations (hint, is this column on DB?).
+	@Column(name = "created", nullable = true)
 	protected LocalDateTime created;
 
 	// TODO PC06 - Add missing annotations (hint, is this column on DB?).
+	@Column(name = "updated", nullable = true)
 	protected LocalDateTime updated;
 
 	public abstract ID getId();

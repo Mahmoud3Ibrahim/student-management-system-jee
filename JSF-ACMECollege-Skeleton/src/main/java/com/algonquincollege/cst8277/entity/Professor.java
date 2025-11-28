@@ -6,7 +6,6 @@
  */
 package com.algonquincollege.cst8277.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,26 +30,39 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * The persistent class for the course database table.
  */
 //TODO P01 - Add the missing annotations.
+@Entity
+@Table(name = "professor")
+@Access(AccessType.FIELD)
+@AttributeOverride(name = "id", column = @Column(name = "professor_id"))
+@NamedQuery(name = Professor.ALL_PROFESSORS_QUERY, query = "SELECT p FROM Professor p LEFT JOIN FETCH p.courseRegistrations")
 //TODO P02 - Do we need a mapped super class?  If so, which one?
-public class Professor implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class Professor extends PojoBase {
 	
 	public static final String ALL_PROFESSORS_QUERY = "Professor.findAll";
 
 	// TODO P03 - Add annotations.
+	@Basic(optional = false)
+	@Column(name = "first_name", nullable = false, length = 50)
 	protected String firstName;
 
 	// TODO P04 - Add annotations.
+	@Basic(optional = false)
+	@Column(name = "last_name", nullable = false, length = 50)
 	protected String lastName;
 
 	// TODO P05 - Add annotations.
+	@Basic(optional = true)
+	@Column(name = "degree", nullable = true, length = 45)
 	protected String degree;
 
 	// TODO P06 - Add annotations for 1:M relation.  What should be the cascade and fetch types?
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "professor")
 	// TODO P07 - Add other missing annotations.
+	@JsonIgnore
 	protected Set<CourseRegistration> courseRegistrations = new HashSet<>();
 	
 	// TODO P08 - Add annotations.
+	@Transient
 	protected boolean editable = false;
 
 	public Professor() {
@@ -82,6 +94,7 @@ public class Professor implements Serializable {
 	}
 
 	// TODO P09 - Is an annotation needed here?
+	@JsonIgnore
 	public Set<CourseRegistration> getCourseRegistrations() {
 		return courseRegistrations;
 	}

@@ -85,6 +85,7 @@ public class CourseRegistrationResource {
         CourseRegistration newCourseRegistrationWithIdTimestamps = service.persistCourseRegistration(newCourseRegistration);
         if (newCourseRegistrationWithIdTimestamps == null) {
             return Response.status(Status.NOT_FOUND)
+                    .type(MediaType.APPLICATION_JSON)
                     .entity(new HttpErrorResponse(404, "Student or course not found"))
                     .build();
         }
