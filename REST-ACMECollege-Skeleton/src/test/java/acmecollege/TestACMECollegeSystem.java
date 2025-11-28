@@ -444,7 +444,7 @@ public class TestACMECollegeSystem {
         assertThat(courses, is(not(empty())));
         int existingCourseId = courses.get(0).getId();
         
-        String jsonBody = "{\"student\":{\"id\":" + existingStudentId + "},\"course\":{\"id\":" + existingCourseId + "},\"year\":2024,\"semester\":\"FALL\"}";
+        String jsonBody = "{\"id\":{\"studentId\":" + existingStudentId + ",\"courseId\":" + existingCourseId + "},\"year\":2024,\"semester\":\"FALL\"}";
         
         Response response = webTarget
             .register(adminAuth)

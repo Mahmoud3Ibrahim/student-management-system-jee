@@ -38,6 +38,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.algonquincollege.cst8277.ejb.ACMECollegeService;
 import com.algonquincollege.cst8277.entity.CourseRegistration;
+import com.algonquincollege.cst8277.entity.CourseRegistrationPK;
 import com.algonquincollege.cst8277.entity.Professor;
 import com.algonquincollege.cst8277.rest.resource.HttpErrorResponse;
 
@@ -82,15 +83,26 @@ public class CourseRegistrationResource {
     // Only a user with the SecurityRole 'ADMIN_ROLE' can add a new course registration.
     @RolesAllowed({ADMIN_ROLE})
     public Response addCourseRegistration(CourseRegistration newCourseRegistration) {
+        // Validate that we have student and course
         if (newCourseRegistration == null ||
-                newCourseRegistration.getId() == null ||
-                newCourseRegistration.getId().getStudentId() <= 0 ||
-                newCourseRegistration.getId().getCourseId() <= 0) {
+                newCourseRegistration.getStudent() == null ||
+                newCourseRegistration.getCourse() == null ||
+                newCourseRegistration.getStudent().getId() <= 0 ||
+                newCourseRegistration.getCourse().getId() <= 0) {
             return Response.status(Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity(new HttpErrorResponse(400, "studentId and courseId are required in composite key"))
+                    .entity(new HttpErrorResponse(400, "student and course with valid IDs are required"))
                     .build();
         }
+        
+        // If composite key is missing, create it from student/course IDs
+        if (newCourseRegistration.getId() == null) {
+            CourseRegistrationPK pk = new CourseRegistrationPK();
+            pk.setStudentId(newCourseRegistration.getStudent().getId());
+            pk.setCourseId(newCourseRegistration.getCourse().getId());
+            newCourseRegistration.setId(pk);
+        }
+        
         CourseRegistration newCourseRegistrationWithIdTimestamps = service.persistCourseRegistration(newCourseRegistration);
         if (newCourseRegistrationWithIdTimestamps == null) {
             return Response.status(Status.NOT_FOUND)
