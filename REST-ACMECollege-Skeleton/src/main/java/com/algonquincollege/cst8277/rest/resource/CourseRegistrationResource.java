@@ -82,6 +82,15 @@ public class CourseRegistrationResource {
     // Only a user with the SecurityRole 'ADMIN_ROLE' can add a new course registration.
     @RolesAllowed({ADMIN_ROLE})
     public Response addCourseRegistration(CourseRegistration newCourseRegistration) {
+        if (newCourseRegistration == null ||
+                newCourseRegistration.getId() == null ||
+                newCourseRegistration.getId().getStudentId() <= 0 ||
+                newCourseRegistration.getId().getCourseId() <= 0) {
+            return Response.status(Status.BAD_REQUEST)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new HttpErrorResponse(400, "studentId and courseId are required in composite key"))
+                    .build();
+        }
         CourseRegistration newCourseRegistrationWithIdTimestamps = service.persistCourseRegistration(newCourseRegistration);
         if (newCourseRegistrationWithIdTimestamps == null) {
             return Response.status(Status.NOT_FOUND)

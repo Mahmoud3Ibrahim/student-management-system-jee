@@ -56,6 +56,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.algonquincollege.cst8277.entity.Course;
 import com.algonquincollege.cst8277.entity.CourseRegistration;
+import com.algonquincollege.cst8277.entity.CourseRegistrationPK;
 import com.algonquincollege.cst8277.entity.Professor;
 import com.algonquincollege.cst8277.entity.SecurityRole;
 import com.algonquincollege.cst8277.entity.SecurityUser;
@@ -369,22 +370,23 @@ public class ACMECollegeService implements Serializable {
 
 	@Transactional
 	public CourseRegistration persistCourseRegistration(CourseRegistration newCourseRegistration) {
-		int studentId = 0;
-		int courseId = 0;
-		
-		// Get IDs from the entity objects (from JSON: student.id, course.id)
-		if (newCourseRegistration.getStudent() != null) {
-			studentId = newCourseRegistration.getStudent().getId();
-		}
-		if (newCourseRegistration.getCourse() != null) {
-			courseId = newCourseRegistration.getCourse().getId();
-		}
-		
-		if (studentId == 0 || courseId == 0) {
+		if (newCourseRegistration == null) {
 			return null;
 		}
 		
-		// Fetch actual managed entities from DB
+		CourseRegistrationPK pk = newCourseRegistration.getId();
+		if (pk == null) {
+			pk = new CourseRegistrationPK();
+			newCourseRegistration.setId(pk);
+		}
+		
+		int studentId = pk.getStudentId();
+		int courseId = pk.getCourseId();
+		
+		if (studentId <= 0 || courseId <= 0) {
+			return null;
+		}
+		
 		Student student = em.find(Student.class, studentId);
 		Course course = em.find(Course.class, courseId);
 		
@@ -392,7 +394,6 @@ public class ACMECollegeService implements Serializable {
 			return null;
 		}
 		
-		// Set the actual entities (this also updates the composite key IDs)
 		newCourseRegistration.setStudent(student);
 		newCourseRegistration.setCourse(course);
 		
