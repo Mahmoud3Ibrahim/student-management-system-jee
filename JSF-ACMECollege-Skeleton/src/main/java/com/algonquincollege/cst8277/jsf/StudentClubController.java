@@ -9,7 +9,6 @@
 package com.algonquincollege.cst8277.jsf;
 
 import java.io.Serializable;
-import java.io.StringReader;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
@@ -26,9 +25,6 @@ import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
 import jakarta.servlet.ServletContext;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -37,6 +33,9 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.algonquincollege.cst8277.utility.MyConstants;
 import com.algonquincollege.cst8277.entity.StudentClub;
@@ -47,6 +46,8 @@ import com.algonquincollege.cst8277.rest.resource.MyObjectMapperProvider;
 public class StudentClubController implements Serializable, MyConstants {
     /** explicit set serialVersionUID */
     private static final long serialVersionUID = 1L;
+    
+    private static final Logger LOG = LogManager.getLogger();
 
     @Inject
     protected FacesContext facesContext;
@@ -165,36 +166,50 @@ public class StudentClubController implements Serializable, MyConstants {
     }
 
     public String addNewClub(StudentClub theNewClub) {
+        // Log data before sending to REST API
+        LOG.debug("Attempting to add new StudentClub - Name: {}, Desc: {}, Academic: {}", 
+                theNewClub != null ? theNewClub.getName() : "null",
+                theNewClub != null ? theNewClub.getDesc() : "null",
+                theNewClub != null ? theNewClub.getAcademic() : "null");
+        
+        // Serialize manually to include club-type
+        String jsonPayload;
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper()
+                .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule())
+                .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .configure(com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            
+            jsonPayload = mapper.writeValueAsString(theNewClub);
+            LOG.debug("JSON Payload: {}", jsonPayload);
+        } catch (Exception e) {
+            LOG.error("Failed to serialize club", e);
+            return null;
+        }
+        
         Response response = webTarget
                 .register(auth)
                 .path(STUDENT_CLUB_RESOURCE_NAME)
                 .request()
-                .post(Entity.json(theNewClub));
+                .post(Entity.entity(jsonPayload, jakarta.ws.rs.core.MediaType.APPLICATION_JSON));
         
-        if (response.getStatus() == 200) {
+        int statusCode = response.getStatus();
+        LOG.debug("Response status code: {}", statusCode);
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        
+        if (statusCode == 200) {
             StudentClub newClub = response.readEntity(StudentClub.class);
             listOfClubs.add(newClub);
-        } else if (response.getStatus() == 409) {
-            try {
-                String errorJson = response.readEntity(String.class);
-                JsonReader reader = Json.createReader(new StringReader(errorJson));
-                JsonObject errorObj = reader.readObject();
-                String reasonPhrase = errorObj.getString("reason-phrase");
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, reasonPhrase, null));
-            } catch (Exception e) {
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Duplicate entry", null));
-            }
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Club added successfully!", null));
+        } else if (statusCode == 409) {
+            response.readEntity(String.class);
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Duplicate club name", null));
+        } else if (statusCode == 400) {
+            String errorResponse = response.readEntity(String.class);
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Validation Error: " + errorResponse, null));
         } else {
-            // Handle other errors (500, 404, etc.)
-            try {
-                String errorJson = response.readEntity(String.class);
-                JsonReader reader = Json.createReader(new StringReader(errorJson));
-                JsonObject errorObj = reader.readObject();
-                String reasonPhrase = errorObj.getString("reason-phrase");
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, reasonPhrase, null));
-            } catch (Exception e) {
-                facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Failed to add club (Status: " + response.getStatus() + ")", null));
-            }
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Status " + statusCode, null));
         }
         return null; //current page
     }

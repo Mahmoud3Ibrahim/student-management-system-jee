@@ -77,28 +77,55 @@ public class StudentClubResource {
     // Only a user with the SecurityRole 'ADMIN_ROLE' can add a new student club (Academic or NonAcademic).
     @RolesAllowed({ADMIN_ROLE})
     public Response addStudentClub(StudentClub newStudentClub) {
+        LOG.debug("Received request to add new StudentClub");
+        
+        // Log received data
+        if (newStudentClub == null) {
+            LOG.warn("Received null StudentClub object");
+        } else {
+            LOG.debug("StudentClub received - Name: '{}', Desc: '{}', Academic: {}, Class: {}", 
+                    newStudentClub.getName(),
+                    newStudentClub.getDesc(),
+                    newStudentClub.getAcademic(),
+                    newStudentClub.getClass().getSimpleName());
+            LOG.debug("StudentClub toString: {}", newStudentClub.toString());
+        }
+        
         if (newStudentClub == null ||
                 newStudentClub.getName() == null || newStudentClub.getName().trim().isEmpty() ||
                 newStudentClub.getDesc() == null || newStudentClub.getDesc().trim().isEmpty()) {
+            LOG.warn("Validation failed - Name: '{}', Desc: '{}'", 
+                    newStudentClub != null ? newStudentClub.getName() : "null",
+                    newStudentClub != null ? newStudentClub.getDesc() : "null");
             return Response.status(Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
                     .entity(new HttpErrorResponse(400, "Name and description cannot be null or empty"))
                     .build();
         }
         try {
+            LOG.debug("Attempting to persist StudentClub");
             StudentClub newStudentClubWithIdTimestamps = service.persistStudentClub(newStudentClub);
+            LOG.debug("Successfully persisted StudentClub with ID: {}", newStudentClubWithIdTimestamps.getId());
             return Response.ok(newStudentClubWithIdTimestamps)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
         } catch (IllegalArgumentException e) {
+            LOG.warn("IllegalArgumentException while persisting StudentClub: {}", e.getMessage());
             return Response.status(Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
                     .entity(new HttpErrorResponse(400, e.getMessage()))
                     .build();
         } catch (RuntimeException e) {
+            LOG.warn("RuntimeException while persisting StudentClub: {}", e.getMessage(), e);
             return Response.status(Status.CONFLICT)
                 .type(MediaType.APPLICATION_JSON)
                 .entity(new HttpErrorResponse(409, e.getMessage()))
+                .build();
+        } catch (Exception e) {
+            LOG.error("Unexpected exception while persisting StudentClub: {}", e.getMessage(), e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new HttpErrorResponse(500, "Internal server error: " + e.getMessage()))
                 .build();
         }
     }
@@ -115,16 +142,24 @@ public class StudentClubResource {
                     .entity(new HttpErrorResponse(400, "Name and description cannot be null or empty"))
                     .build();
         }
-        StudentClub updatedStudentClub = service.updateStudentClubById(id, studentClubWithUpdates);
-        if (updatedStudentClub == null) {
-            return Response.status(Status.NOT_FOUND)
-                    .type(MediaType.APPLICATION_JSON)
-                    .entity(new HttpErrorResponse(404, "Student club not found"))
-                    .build();
+        try {
+            StudentClub updatedStudentClub = service.updateStudentClubById(id, studentClubWithUpdates);
+            if (updatedStudentClub == null) {
+                return Response.status(Status.NOT_FOUND)
+                        .type(MediaType.APPLICATION_JSON)
+                        .entity(new HttpErrorResponse(404, "Student club not found"))
+                        .build();
+            }
+            return Response.ok(updatedStudentClub)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+        } catch (Exception e) {
+            LOG.error("Unexpected exception while updating StudentClub: {}", e.getMessage(), e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(new HttpErrorResponse(500, "Internal server error: " + e.getMessage()))
+                .build();
         }
-        return Response.ok(updatedStudentClub)
-            .type(MediaType.APPLICATION_JSON)
-            .build();
     }
     
     @DELETE

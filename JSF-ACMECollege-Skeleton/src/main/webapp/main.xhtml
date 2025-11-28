@@ -779,6 +779,8 @@
                     </div>
                     <h:inputText type="text" id="new_name" style="width: 50em;" styleClass="form-control placeholder-darkgray"
                       aria-describedby="name-addon"
+                      required="true"
+                      requiredMessage="#{uiconsts['enter_valid_string']}"
                       validatorMessage="#{uiconsts['enter_valid_string']}" value="#{newStudentClub.name}"
                       a:placeholder="#{uiconsts['placeholder_ClubName']}">
                       <f:validateLength minimum="1" maximum="100" />
@@ -791,6 +793,8 @@
                     </div>
                     <h:inputText type="text" id="new_desc" styleClass="form-control placeholder-darkgray"
                       aria-describedby="desc-addon"
+                      required="true"
+                      requiredMessage="#{uiconsts['enter_valid_string']}"
                       validatorMessage="#{uiconsts['enter_valid_string']}"
                       value="#{newStudentClub.desc}" a:placeholder="#{uiconsts['placeholder_Description']}">
                       <f:validateLength minimum="1" maximum="200" />
