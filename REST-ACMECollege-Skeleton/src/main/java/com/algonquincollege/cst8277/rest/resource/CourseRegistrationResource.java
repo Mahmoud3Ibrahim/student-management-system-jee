@@ -38,7 +38,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.algonquincollege.cst8277.ejb.ACMECollegeService;
 import com.algonquincollege.cst8277.entity.CourseRegistration;
-import com.algonquincollege.cst8277.entity.CourseRegistrationPK;
 import com.algonquincollege.cst8277.entity.Professor;
 import com.algonquincollege.cst8277.rest.resource.HttpErrorResponse;
 
@@ -83,34 +82,50 @@ public class CourseRegistrationResource {
     // Only a user with the SecurityRole 'ADMIN_ROLE' can add a new course registration.
     @RolesAllowed({ADMIN_ROLE})
     public Response addCourseRegistration(CourseRegistration newCourseRegistration) {
-        // Validate that we have student and course
+        LOG.debug("Adding new course registration...");
+        
+        // Validate that we have a valid composite key
         if (newCourseRegistration == null ||
-                newCourseRegistration.getStudent() == null ||
-                newCourseRegistration.getCourse() == null ||
-                newCourseRegistration.getStudent().getId() <= 0 ||
-                newCourseRegistration.getCourse().getId() <= 0) {
+                newCourseRegistration.getId() == null ||
+                newCourseRegistration.getId().getStudentId() <= 0 ||
+                newCourseRegistration.getId().getCourseId() <= 0) {
+            LOG.error("Invalid composite key in course registration request");
             return Response.status(Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity(new HttpErrorResponse(400, "student and course with valid IDs are required"))
+                    .entity(new HttpErrorResponse(400, "studentId and courseId are required in composite key"))
                     .build();
         }
         
-        // If composite key is missing, create it from student/course IDs
-        if (newCourseRegistration.getId() == null) {
-            CourseRegistrationPK pk = new CourseRegistrationPK();
-            pk.setStudentId(newCourseRegistration.getStudent().getId());
-            pk.setCourseId(newCourseRegistration.getCourse().getId());
-            newCourseRegistration.setId(pk);
-        }
-        
-        CourseRegistration newCourseRegistrationWithIdTimestamps = service.persistCourseRegistration(newCourseRegistration);
-        if (newCourseRegistrationWithIdTimestamps == null) {
-            return Response.status(Status.NOT_FOUND)
+        try {
+            CourseRegistration newCourseRegistrationWithIdTimestamps = service.persistCourseRegistration(newCourseRegistration);
+            
+            if (newCourseRegistrationWithIdTimestamps == null) {
+                LOG.error("Student or course not found");
+                return Response.status(Status.NOT_FOUND)
+                        .type(MediaType.APPLICATION_JSON)
+                        .entity(new HttpErrorResponse(404, "Student or course not found"))
+                        .build();
+            }
+            
+            LOG.debug("Course registration added successfully");
+            return Response.ok(newCourseRegistrationWithIdTimestamps).build();
+            
+        } catch (jakarta.persistence.PersistenceException e) {
+            // Duplicate key or other database constraint violation
+            LOG.error("Database constraint violation: {}", e.getMessage());
+            return Response.status(Status.CONFLICT)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity(new HttpErrorResponse(404, "Student or course not found"))
+                    .entity(new HttpErrorResponse(409, "Course registration already exists for this student and course"))
+                    .build();
+                    
+        } catch (Exception e) {
+            // Any other unexpected error
+            LOG.error("Unexpected error adding course registration: {}", e.getMessage(), e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .type(MediaType.APPLICATION_JSON)
+                    .entity(new HttpErrorResponse(500, "Internal server error: " + e.getMessage()))
                     .build();
         }
-        return Response.ok(newCourseRegistrationWithIdTimestamps).build();
     }
 
     @PUT
