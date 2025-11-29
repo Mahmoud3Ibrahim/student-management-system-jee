@@ -1,0 +1,145 @@
+{
+  "info": {
+    "_postman_id": "9e4fb3a8-73e2-4bc6-a4f3-7fb4b6cb5b99",
+    "name": "REST-ACMECollege-Skeleton",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Students (admin)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            { "key": "username", "value": "admin", "type": "string" },
+            { "key": "password", "value": "admin", "type": "string" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8080/REST-ACMECollege-Skeleton/api/v1/student",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": [
+            "REST-ACMECollege-Skeleton",
+            "api",
+            "v1",
+            "student"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Courses (admin)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            { "key": "username", "value": "admin", "type": "string" },
+            { "key": "password", "value": "admin", "type": "string" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8080/REST-ACMECollege-Skeleton/api/v1/course",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": [
+            "REST-ACMECollege-Skeleton",
+            "api",
+            "v1",
+            "course"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Professors (admin)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            { "key": "username", "value": "admin", "type": "string" },
+            { "key": "password", "value": "admin", "type": "string" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8080/REST-ACMECollege-Skeleton/api/v1/professor",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": [
+            "REST-ACMECollege-Skeleton",
+            "api",
+            "v1",
+            "professor"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Student Clubs (admin)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            { "key": "username", "value": "admin", "type": "string" },
+            { "key": "password", "value": "admin", "type": "string" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8080/REST-ACMECollege-Skeleton/api/v1/studentclub",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": [
+            "REST-ACMECollege-Skeleton",
+            "api",
+            "v1",
+            "studentclub"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Letter Grades (admin)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            { "key": "username", "value": "admin", "type": "string" },
+            { "key": "password", "value": "admin", "type": "string" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8080/REST-ACMECollege-Skeleton/api/v1/courseregistration/lettergrade",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": [
+            "REST-ACMECollege-Skeleton",
+            "api",
+            "v1",
+            "courseregistration",
+            "lettergrade"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

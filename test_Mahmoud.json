@@ -1,0 +1,765 @@
+{
+	"info": {
+		"_postman_id": "cst8277-final-collection-2025",
+		"name": "CST8277-Project-API",
+		"description": "Complete REST API Collection for ACME College System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/REST-ACMECollege-Skeleton/api/v1/",
+			"type": "string"
+		},
+		{
+			"key": "admin_username",
+			"value": "admin",
+			"type": "string"
+		},
+		{
+			"key": "admin_password",
+			"value": "admin",
+			"type": "string"
+		},
+		{
+			"key": "user_username",
+			"value": "cst8277",
+			"type": "string"
+		},
+		{
+			"key": "user_password",
+			"value": "8277",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "STUDENT",
+			"item": [
+				{
+					"name": "GET All Students",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}student",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "student"]
+						}
+					}
+				},
+				{
+					"name": "GET Student by ID",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{user_username}}" },
+								{ "key": "password", "value": "{{user_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}student/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "student", "1"]
+						}
+					}
+				},
+				{
+					"name": "POST Create Student",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phoneNumber\": \"123-456-7890\",\n  \"program\": {\n    \"id\": 1\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}student",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "student"]
+						}
+					}
+				},
+				{
+					"name": "PUT Update Student",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe Updated\",\n  \"email\": \"john.doe@example.com\",\n  \"phoneNumber\": \"123-456-7890\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}student/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "student", "1"]
+						}
+					}
+				},
+				{
+					"name": "DELETE Student",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}student/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "student", "1"]
+						}
+					}
+				},
+				{
+					"name": "GET All Programs",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{user_username}}" },
+								{ "key": "password", "value": "{{user_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}student/program",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "student", "program"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "COURSE",
+			"item": [
+				{
+					"name": "GET All Courses",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}course",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "course"]
+						}
+					}
+				},
+				{
+					"name": "GET Course by ID",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{user_username}}" },
+								{ "key": "password", "value": "{{user_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}course/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "course", "1"]
+						}
+					}
+				},
+				{
+					"name": "POST Create Course",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"courseCode\": \"CST8277\",\n  \"courseTitle\": \"Enterprise Application Programming\",\n  \"creditUnits\": 3,\n  \"online\": 0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}course",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "course"]
+						}
+					}
+				},
+				{
+					"name": "PUT Update Course",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"courseCode\": \"CST8277\",\n  \"courseTitle\": \"Enterprise Application Programming Updated\",\n  \"creditUnits\": 4,\n  \"online\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}course/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "course", "1"]
+						}
+					}
+				},
+				{
+					"name": "DELETE Course",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}course/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "course", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "PROFESSOR",
+			"item": [
+				{
+					"name": "GET All Professors",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}professor",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "professor"]
+						}
+					}
+				},
+				{
+					"name": "GET Professor by ID",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{user_username}}" },
+								{ "key": "password", "value": "{{user_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}professor/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "professor", "1"]
+						}
+					}
+				},
+				{
+					"name": "POST Create Professor",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"degree\": \"PhD\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}professor",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "professor"]
+						}
+					}
+				},
+				{
+					"name": "PUT Update Professor",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith Updated\",\n  \"degree\": \"PhD\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}professor/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "professor", "1"]
+						}
+					}
+				},
+				{
+					"name": "DELETE Professor",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}professor/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "professor", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "STUDENT CLUB",
+			"item": [
+				{
+					"name": "GET All Clubs",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}studentclub",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "studentclub"]
+						}
+					}
+				},
+				{
+					"name": "GET Club by ID",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{user_username}}" },
+								{ "key": "password", "value": "{{user_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}studentclub/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "studentclub", "1"]
+						}
+					}
+				},
+				{
+					"name": "POST Create Academic Club",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"club-type\": \"academic\",\n  \"name\": \"Computer Science Club\",\n  \"desc\": \"Club for CS students\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}studentclub",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "studentclub"]
+						}
+					}
+				},
+				{
+					"name": "POST Create Non-Academic Club",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"club-type\": \"non-academic\",\n  \"name\": \"Sports Club\",\n  \"desc\": \"Club for sports activities\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}studentclub",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "studentclub"]
+						}
+					}
+				},
+				{
+					"name": "PUT Update Club",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Computer Science Club Updated\",\n  \"desc\": \"Updated description\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}studentclub/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "studentclub", "1"]
+						}
+					}
+				},
+				{
+					"name": "DELETE Club",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}studentclub/1",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "studentclub", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "COURSE REGISTRATION",
+			"item": [
+				{
+					"name": "GET All Course Registrations",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}courseregistration",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "courseregistration"]
+						}
+					}
+				},
+				{
+					"name": "GET Course Registration by IDs",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{user_username}}" },
+								{ "key": "password", "value": "{{user_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}courseregistration/student/1/course/2",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "courseregistration", "student", "1", "course", "2"]
+						}
+					}
+				},
+				{
+					"name": "POST Create Course Registration",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"student\": {\n    \"id\": 1\n  },\n  \"course\": {\n    \"id\": 2\n  },\n  \"year\": 2024,\n  \"semester\": \"FALL\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}courseregistration",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "courseregistration"]
+						}
+					}
+				},
+				{
+					"name": "PUT Assign Professor",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}courseregistration/student/1/course/2",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "courseregistration", "student", "1", "course", "2"]
+						}
+					}
+				},
+				{
+					"name": "PUT Assign Grade",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"A+\""
+						},
+						"url": {
+							"raw": "{{base_url}}courseregistration/student/1/course/2/lettergrade",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "courseregistration", "student", "1", "course", "2", "lettergrade"]
+						}
+					}
+				},
+				{
+					"name": "DELETE Course Registration",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}courseregistration/student/1/course/2",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "courseregistration", "student", "1", "course", "2"]
+						}
+					}
+				},
+				{
+					"name": "GET All Letter Grades",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}courseregistration/lettergrade",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "courseregistration", "lettergrade"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "CLUB MEMBERSHIP",
+			"item": [
+				{
+					"name": "POST Join Club",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"studentId\": 1,\n  \"clubId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}clubmembership",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "clubmembership"]
+						}
+					}
+				},
+				{
+					"name": "DELETE Leave Club",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "{{admin_username}}" },
+								{ "key": "password", "value": "{{admin_password}}" }
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}clubmembership/student/1/club/2",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["REST-ACMECollege-Skeleton", "api", "v1", "clubmembership", "student", "1", "club", "2"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
