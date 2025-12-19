@@ -2,8 +2,11 @@
  * File:  FacesConfigAndServletContextListener.java
  * Course Materials CST 8277
  * 
+ * This is an academic graduation project for CST8277 course.
+ *
  * @author (original) Mike Norman
  * @author Teddy Yap
+ * @author Mahmoud Ibrahim
  *
  */
 package com.algonquincollege.cst8277;

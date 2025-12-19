@@ -1,277 +1,160 @@
 # ACME College Management System
 
-A comprehensive college management system built with Jakarta EE, featuring a RESTful backend and JSF frontend for managing students, courses, professors, and student clubs.
+**Academic Graduation Project for CST8277 Course**
 
-## Project Structure
+**Author:** Mahmoud Ibrahim
 
-The project consists of two main components:
+---
 
-- **REST-ACMECollege-Skeleton**: Backend REST API built with JAX-RS, JPA/Hibernate, and EJB
-- **JSF-ACMECollege-Skeleton**: Frontend web application built with Jakarta Server Faces
+## Overview
 
-Both applications deploy to Payara Server and share a common MySQL database.
+This project is a comprehensive college management system built using **Jakarta EE 10**.  
+It contains two main parts:
 
-## Key Features
+- **REST-ACMECollege-Skeleton** – Backend REST API  
+- **JSF-ACMECollege-Skeleton** – Frontend web application (JSF pages)
 
-### Student Management
-- Full CRUD operations for student records
-- Track student information including name, email, phone, and program
-- Secure user authentication and role-based access control
+The REST API communicates with **MySQL**,  
+and the JSF app communicates with the REST API using HTTP.
 
-### Course Registration
-- Register students for courses with semester and year tracking
-- Assign professors to course registrations
-- Grade assignment with standardized letter grades
-- Dynamic dropdowns for all selection fields to prevent data entry errors
+---
 
-### Professor Management
-- Maintain professor records with department affiliations
-- View professor assignments across multiple course registrations
+## Project Description
+
+This is an academic graduation project developed for the CST8277 course. The system provides a complete solution for managing college operations including student enrollment, course registration, professor management, and student club activities.
+
+### What I Implemented
+
+1. **REST API Backend (REST-ACMECollege-Skeleton)**
+   - Complete RESTful API implementation using JAX-RS
+   - Entity classes with JPA annotations for database persistence
+   - Service layer (EJB) for business logic
+   - Security implementation using Jakarta Security
+   - Error handling and exception mapping
+   - JSON serialization/deserialization configuration
+
+2. **JSF Frontend (JSF-ACMECollege-Skeleton)**
+   - User interface implementation using JSF 4.0
+   - Controllers for managing all entities (Students, Courses, Professors, Student Clubs, Course Registrations)
+   - Form validation and error handling
+   - Integration with REST API using Jersey client
+   - Authentication and authorization
+
+3. **Key Features Implemented**
+   - Student management (CRUD operations)
+   - Course management
+   - Professor management with course assignments
+   - Course registration with composite keys
+   - Student club management (Academic and Non-Academic clubs)
+   - Club membership management
+   - Security and authentication
+   - Form validation and error handling
+   - Logging and debugging capabilities
+
+---
+
+## Features
+
+### Students
+- Create, update, delete students  
+- View student information  
+- Data loaded from REST API
+
+### Courses & Registrations
+- Register students in courses  
+- Set semester, year, professor, and grade  
+- Uses composite key (student + course)
+
+### Professors
+- Add and manage professor records  
+- Show their course assignments
 
 ### Student Clubs
-- Support for both academic and non-academic clubs
-- Complete club lifecycle management (create, update, delete)
-- Student membership tracking
+- Academic + Non-academic clubs  
+- Create, update, delete clubs  
+- Track membership
 
-## Recent Improvements
+### Security
+- Login using Jakarta Security (Basic Authentication)
 
-### Enhanced Validation and Error Handling
+---
 
-We've improved the robustness of the system by adding comprehensive validation at multiple layers:
+## Technology Stack
 
-- **API Layer**: All REST endpoints now validate incoming data before processing. Invalid requests return proper HTTP 400 status codes with clear error messages instead of cryptic 500 errors.
-- **Service Layer**: Business logic validates entity relationships and ensures data integrity before persistence operations.
-- **Database Layer**: Proper foreign key handling ensures referential integrity across all tables.
+- Java 17+  
+- Jakarta EE 10  
+- JAX-RS (REST)  
+- JPA / Hibernate  
+- JSF 4.0  
+- Payara 6.2024.4  
+- MySQL 8  
+- Maven
 
-### Dynamic Data Loading
+---
 
-Previously, several UI components used hardcoded values that could become outdated. We've replaced these with dynamic data loading:
-
-- **Semesters**: Now loaded from the database via a new REST endpoint (`GET /courseregistration/semester`)
-- **Letter Grades**: Integrated with existing endpoint (`GET /courseregistration/lettergrade`)
-- **Year Selection**: Dynamically generated based on current date
-
-This approach eliminates the need for code changes when adding new semesters or adjusting grading scales.
-
-### Composite Key Handling
-
-Course registrations use a composite primary key (student ID + course ID). We've refined the handling to ensure:
-
-- Proper attachment of managed JPA entities before persistence
-- Correct JSON serialization/deserialization of composite keys
-- Validation that both student and course exist before creating a registration
-
-### Polymorphic Type Support
-
-Student clubs use single-table inheritance to distinguish between academic and non-academic clubs. The system now correctly:
-
-- Serializes the discriminator field (`club-type`) in JSON payloads
-- Deserializes incoming requests to the appropriate subclass
-- Validates required fields for both club types
-
-### Better Error Feedback
-
-The JSF frontend now handles API errors gracefully:
-
-- Checks HTTP status codes before attempting to parse responses
-- Displays user-friendly error messages in the UI
-- Prevents application crashes from unexpected response formats
-
-## Technical Stack
-
-- **Application Server**: Payara 6.2024.4
-- **Java Version**: Java 17+
-- **Build Tool**: Maven 3.6+
-- **Database**: MySQL 8.0+
-- **Frameworks**:
-  - Jakarta EE 10
-  - JAX-RS (Jersey) for REST APIs
-  - JPA 3.1 (Hibernate) for persistence
-  - JSF 4.0 for web UI
-  - Jackson for JSON processing
-
-## Setup and Installation
-
-### Prerequisites
-
-1. Install Java JDK 17 or higher
-2. Install Apache Maven
-3. Install Payara Server 6.2024.4
-4. Install MySQL Server 8.0+
-
-### Database Configuration
-
-1. Create a MySQL database named `acme_college`
-2. Update JDBC connection settings in Payara:
-   - Pool Name: `acme_college_pool`
-   - JNDI Name: `java:app/datasources/ACMECollegeDS`
-   - Connection URL: `jdbc:mysql://localhost:3306/acme_college`
-
-The application will automatically create tables and load initial data on first deployment.
-
-### Building the Projects
+## Building the Project
 
 ```bash
-# Build REST backend
+# REST backend
 cd REST-ACMECollege-Skeleton
 mvn clean install
 
-# Build JSF frontend
+# JSF frontend
 cd ../JSF-ACMECollege-Skeleton
 mvn clean install
 ```
 
-### Deployment
+---
 
-1. Start Payara Server
-2. Deploy the REST application first:
-   ```bash
-   asadmin deploy REST-ACMECollege-Skeleton/target/REST-ACMECollege-Skeleton.war
-   ```
-3. Deploy the JSF application:
-   ```bash
-   asadmin deploy JSF-ACMECollege-Skeleton/target/JSF-ACMECollege-Skeleton.war
-   ```
+## Deploying
 
-The JSF application will be available at `http://localhost:8080/JSF-ACMECollege-Skeleton`
+1. Start Payara Server  
+2. Deploy REST:
 
-### Default Credentials
+```bash
+asadmin deploy REST-ACMECollege-Skeleton/target/REST-ACMECollege-Skeleton.war
+```
 
-- **Admin User**: 
-  - Username: `admin`
-  - Password: `admin`
+3. Deploy JSF:
 
-## API Documentation
+```bash
+asadmin deploy JSF-ACMECollege-Skeleton/target/JSF-ACMECollege-Skeleton.war
+```
 
-### Base URL
+### Default Login
+- **Username:** admin  
+- **Password:** admin
+
+---
+
+## REST API Base URL
+
 ```
 http://localhost:8080/REST-ACMECollege-Skeleton/api/v1
 ```
 
-### Authentication
-All endpoints require HTTP Basic Authentication with admin credentials.
+Main endpoints:
+- `/student`
+- `/course`
+- `/professor`
+- `/courseregistration`
+- `/studentclub`
 
-### Main Endpoints
+All endpoints require **Basic Authentication**.
 
-#### Students
-- `GET /student` - List all students
-- `GET /student/{id}` - Get student by ID
-- `POST /student` - Create new student
-- `PUT /student/{id}` - Update student
-- `DELETE /student/{id}` - Delete student
+---
 
-#### Courses
-- `GET /course` - List all courses
-- `GET /course/{id}` - Get course by ID
-- `POST /course` - Create new course
-- `PUT /course/{id}` - Update course
-- `DELETE /course/{id}` - Delete course
-
-#### Course Registrations
-- `GET /courseregistration` - List all registrations
-- `GET /courseregistration/student/{studentId}/course/{courseId}` - Get specific registration
-- `POST /courseregistration` - Create new registration
-- `PUT /courseregistration/student/{studentId}/course/{courseId}` - Assign professor
-- `PUT /courseregistration/student/{studentId}/course/{courseId}/lettergrade` - Assign grade
-- `GET /courseregistration/semester` - Get list of semesters
-- `GET /courseregistration/lettergrade` - Get list of letter grades
-
-#### Professors
-- `GET /professor` - List all professors
-- `GET /professor/{id}` - Get professor by ID
-- `POST /professor` - Create new professor
-- `PUT /professor/{id}` - Update professor
-- `DELETE /professor/{id}` - Delete professor
-
-#### Student Clubs
-- `GET /studentclub` - List all clubs
-- `GET /studentclub/{id}` - Get club by ID
-- `POST /studentclub` - Create new club
-- `PUT /studentclub/{id}` - Update club
-- `DELETE /studentclub/{id}` - Delete club
-
-## Development Notes
-
-### Running Tests
-
-The REST project includes a comprehensive test suite:
+## Running Tests (REST Project)
 
 ```bash
 cd REST-ACMECollege-Skeleton
 mvn test
 ```
 
-Make sure the REST application is deployed and running before executing tests.
-
-### Database Schema Management
-
-The application uses JPA schema generation. On deployment, it will:
-1. Drop existing tables
-2. Create new tables based on entity definitions
-3. Load initial data from `data.sql`
-
-To disable this behavior (e.g., in production), modify `persistence.xml`:
-```xml
-<property name="jakarta.persistence.schema-generation.database.action" value="none"/>
-```
-
-### Adding New Semesters
-
-Simply insert new records into the `semester` table. The UI will automatically pick them up on next page load:
-
-```sql
-INSERT INTO semester (name) VALUES ('FALL2025');
-```
-
-### Logging
-
-Both applications use SLF4J with Logback. Logs are written to the Payara server log directory.
-
-To adjust log levels, modify the logging configuration in Payara admin console.
-
-## Known Limitations
-
-- The system currently supports only admin-level users. Student and professor roles are defined in the database but not fully implemented in the UI.
-- Course registration updates are limited to professor and grade assignment. Changing semester or year requires deleting and recreating the registration.
-- Student club membership management is not yet implemented in the JSF UI (API endpoints exist).
-
-## Troubleshooting
-
-### Common Issues
-
-**Problem**: "MessageBodyReader not found" errors
-
-**Solution**: Ensure all REST endpoints explicitly set the content type to `application/json` for both success and error responses.
-
 ---
 
-**Problem**: Duplicate data after redeployment
+## Notes
 
-**Solution**: Both WAR files have schema generation enabled. To prevent duplicates, set `schema-generation.database.action` to `none` in one of the `persistence.xml` files.
-
----
-
-**Problem**: Professor assignment returns 500 error
-
-**Solution**: Verify that the professor ID in the request payload exists in the database. The API now validates this and returns 404 for missing professors.
-
----
-
-**Problem**: Student club creation fails with "description cannot be null"
-
-**Solution**: Ensure the `desc` field is populated in the JSON payload. This field is required and cannot be null or empty.
-
-## Contributing
-
-When making changes to the codebase:
-
-1. Maintain consistent validation across all three layers (REST, Service, JSF)
-2. Always return proper HTTP status codes (400 for validation errors, 404 for not found, 500 for server errors)
-3. Include descriptive error messages in the response body
-4. Update tests to reflect any changes to API contracts
-5. Keep JSON field names consistent with database column names where possible
-
-## License
-
-This project is developed as part of the CST8277 course at Algonquin College.
-
+- JSF must call REST for all data  
+- Deploy REST **before** JSF  
+- Database tables are created automatically by JPA

@@ -2,8 +2,11 @@
  * File:  CustomIdentityStore.java
  * Course Materials CST 8277
  * 
+ * This is an academic graduation project for CST8277 course.
+ *
  * @author Mike Norman
  * @author Teddy Yap
+ * @author Mahmoud Ibrahim
  * 
  * Note:  Students do NOT need to change anything in this class.
  */

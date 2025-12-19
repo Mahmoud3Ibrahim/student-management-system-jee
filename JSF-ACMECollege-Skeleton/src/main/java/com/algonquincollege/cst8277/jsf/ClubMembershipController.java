@@ -1,11 +1,4 @@
-/********************************************************************************************************
- * File:  ClubMembershipController.java
- * Course Materials CST 8277
- * 
- * @author (original) Mike Norman
- * @author Teddy Yap
- *
- */
+
 package com.algonquincollege.cst8277.jsf;
 
 import java.io.Serializable;

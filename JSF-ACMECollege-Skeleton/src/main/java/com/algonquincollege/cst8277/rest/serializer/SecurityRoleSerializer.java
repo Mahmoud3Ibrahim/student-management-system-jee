@@ -2,9 +2,12 @@
  * File:  SecurityRoleSerializer.java
  * Course Materials CST 8277
  *
+ * This is an academic graduation project for CST8277 course.
+ *
  * @author Teddy Yap
  * @author Shariar (Shawn) Emami
  * @author Mike Norman
+ * @author Mahmoud Ibrahim
  *
  */
 package com.algonquincollege.cst8277.rest.serializer;

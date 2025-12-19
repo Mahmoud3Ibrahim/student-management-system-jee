@@ -1,10 +1,4 @@
-/********************************************************************************************************
- * File:  ClubMembershipRequest.java
- * Course Materials CST 8277
- * 
- * @author Teddy Yap
- * 
- */
+
 package com.algonquincollege.cst8277.jsf;
 
 import java.io.Serializable;

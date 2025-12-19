@@ -2,8 +2,11 @@
  * File:  HttpErrorResponse.java
  * Course Materials CST 8277
  *
+ * This is an academic graduation project for CST8277 course.
+ *
  * @author Teddy Yap
  * @author (original) Mike Norman
+ * @author Mahmoud Ibrahim
  * 
  * Note:  Students do NOT need to change anything in this class.
  *
